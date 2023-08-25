@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="PublishConfigData" autoUpload="Always" serverName="zephyrheights" confirmBeforeDeletion="false" autoUploadExternalChanges="true">
+    <option name="confirmBeforeDeletion" value="false" />
+    <serverData>
+      <paths name="maretimebay">
+        <serverdata>
+          <mappings>
+            <mapping deploy="/pool/web/sunnystarbot" local="$PROJECT_DIR$" web="/" />
+          </mappings>
+          <excludedPaths>
+            <excludedPath local="true" path="/Volumes/Projects/sunnystarbot/includes/runtime/venv" />
+          </excludedPaths>
+        </serverdata>
+      </paths>
+      <paths name="zephyrheights">
+        <serverdata>
+          <mappings>
+            <mapping deploy="/pool/web/sunnystarbot" local="$PROJECT_DIR$" web="/" />
+          </mappings>
+          <excludedPaths>
+            <excludedPath local="true" path="$PROJECT_DIR$/includes/runtime/venv" />
+          </excludedPaths>
+        </serverdata>
+      </paths>
+    </serverData>
+    <option name="myAutoUpload" value="ALWAYS" />
+  </component>
+</project>
