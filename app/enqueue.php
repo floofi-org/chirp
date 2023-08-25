@@ -13,7 +13,7 @@ if (!isset($_GET["text"])) die("false");
 $possible = true;
 
 foreach (array_filter(scandir($_SERVER['DOCUMENT_ROOT'] . "/includes/outputs"), function ($i) { return !str_starts_with($i, "."); }) as $item) {
-    if (file_exists($_SERVER['DOCUMENT_ROOT'] . "/includes/outputs/" . $item . "/author.txt")) {
+    if (file_exists($_SERVER['DOCUMENT_ROOT'] . "/includes/outputs/" . $item . "/author.txt") && !file_exists($_SERVER['DOCUMENT_ROOT'] . "/includes/outputs/" . $item . "/blocked.txt")) {
         if (file_get_contents($_SERVER['DOCUMENT_ROOT'] . "/includes/outputs/" . $item . "/author.txt") === $profile["id"]) {
             if (!file_exists($_SERVER['DOCUMENT_ROOT'] . "/includes/outputs/" . $item . "/complete.txt")) $possible = false;
         }
@@ -121,14 +121,6 @@ if (count($tripped) > 0) {
 
 $data["timing"] = microtime(true) - $start;
 
-if ($code > 0) {
-    // TODO: Save stuff
-}
-
-if ($code > 1) {
-    die("false");
-}
-
 // ---------------------------
 
 $modelText = substr(trim($_GET["text"] ?? ""), 0, 160);
@@ -143,6 +135,19 @@ mkdir($_SERVER['DOCUMENT_ROOT'] . "/includes/outputs/" . $fid);
 file_put_contents($_SERVER['DOCUMENT_ROOT'] . "/includes/outputs/" . $fid . "/author.txt", $profile["id"]);
 file_put_contents($_SERVER['DOCUMENT_ROOT'] . "/includes/outputs/" . $fid . "/timestamp.txt", time());
 file_put_contents($_SERVER['DOCUMENT_ROOT'] . "/includes/outputs/" . $fid . "/input_orig.txt", substr(trim($_GET["text"] ?? ""), 0, 160));
-file_put_contents($_SERVER['DOCUMENT_ROOT'] . "/includes/outputs/" . $fid . "/input.txt", $modelText);
 
-die(json_encode($fid));
+if ($code > 0) {
+    file_put_contents($_SERVER['DOCUMENT_ROOT'] . "/includes/outputs/" . $fid . "/held.txt", $code);
+}
+
+if ($code < 2) {
+    file_put_contents($_SERVER['DOCUMENT_ROOT'] . "/includes/outputs/" . $fid . "/input.txt", $modelText);
+} else {
+    file_put_contents($_SERVER['DOCUMENT_ROOT'] . "/includes/outputs/" . $fid . "/blocked.txt", "");
+}
+
+if ($code > 1) {
+    die("false");
+} else {
+    die(json_encode($fid));
+}

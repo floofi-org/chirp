@@ -15,6 +15,10 @@ while True:
 
             with open("./outputs/" + d + "/input.txt", "r") as f:
                 input = f.read()
+
+                with open("./outputs/" + d + "/process.txt", "a") as f:
+                    f.write(str(os.getpid()))
+
                 end_to_end_infer(input, not pronounciation_dictionary, show_graphs, d)
 
             with open("./outputs/" + d + "/complete.txt", "a") as f:

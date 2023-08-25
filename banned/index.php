@@ -1,11 +1,3 @@
-<?php $strictSession = false; require_once $_SERVER['DOCUMENT_ROOT'] . "/includes/session.php"; global $loggedIn; global $profile;
-
-if ($loggedIn) {
-    header("Location: /app");
-    die();
-}
-
-?>
 <!doctype html>
 <html lang="en">
 <head>
@@ -21,7 +13,11 @@ if ($loggedIn) {
 <div class="container">
     <br><br>
     <h1>Sunny Starbot</h1>
-    <p>Sunny Starbot is currently in a private beta stage. If you are allowed to log in, click on the button below:</p>
-    <a href="/auth/init" class="btn btn-outline-primary">Log in with your Equestria.dev account</a>
+
+    <div class="alert alert-warning" style="margin-bottom: .5rem;">
+        <b>You have been banned from Sunny Starbot.</b> It is currently in a private beta stage and is not accessible to everyone. If you believe you should have access to Sunny Starbot, <a href="https://equestria.dev/contact/" target="_blank">contact us</a>.<?php if (isset($_GET["user"])): ?> You have tried to log in as: <?= strip_tags(base64_decode($_GET["user"])) ?>.<?php endif; ?>
+    </div>
+    
+    <span><a href="/auth/init" class="btn btn-primary">Use another account</a></span>
 </div>
 </html>
