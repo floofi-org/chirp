@@ -1,3 +1,4 @@
+from time import sleep
 from thread import *
 
 if not os.path.exists("./outputs"):
@@ -12,12 +13,17 @@ while True:
                 continue
             if os.path.exists("./outputs/" + d + "/complete.txt"):
                 continue
+            if os.path.exists("./outputs/" + d + "/process.txt"):
+                continue
+
+            if os.path.exists("./outputs/" + d + "/process.txt"):
+                continue
+
+            with open("./outputs/" + d + "/process.txt", "w") as f:
+                f.write(str(os.getpid()))
 
             with open("./outputs/" + d + "/input.txt", "r") as f:
                 input = f.read()
-
-                with open("./outputs/" + d + "/process.txt", "a") as f:
-                    f.write(str(os.getpid()))
 
                 end_to_end_infer(input, not pronounciation_dictionary, show_graphs, d)
 

@@ -123,7 +123,7 @@ $data["timing"] = microtime(true) - $start;
 
 // ---------------------------
 
-$modelText = substr(trim($_GET["text"] ?? ""), 0, 160);
+$modelText = substr(trim(preg_replace("/[^a-zA-Z':\d()[\].?!]/", "", $_GET["text"] ?? "")), 0, 160);
 $uid = uuid();
 $fid = str_replace("-", "", uuid() . "-" . $profile["id"] . "-" . $uid);
 
@@ -135,6 +135,10 @@ mkdir($_SERVER['DOCUMENT_ROOT'] . "/includes/outputs/" . $fid);
 file_put_contents($_SERVER['DOCUMENT_ROOT'] . "/includes/outputs/" . $fid . "/author.txt", $profile["id"]);
 file_put_contents($_SERVER['DOCUMENT_ROOT'] . "/includes/outputs/" . $fid . "/timestamp.txt", time());
 file_put_contents($_SERVER['DOCUMENT_ROOT'] . "/includes/outputs/" . $fid . "/input_orig.txt", substr(trim($_GET["text"] ?? ""), 0, 160));
+
+if ($profile["id"] === json_decode(file_get_contents($_SERVER['DOCUMENT_ROOT'] . "/includes/tokens.json"), true)['oauth']['admin']) {
+    file_put_contents($_SERVER['DOCUMENT_ROOT'] . "/includes/outputs/" . $fid . "/reviewed.txt", "");
+}
 
 if ($code > 0) {
     file_put_contents($_SERVER['DOCUMENT_ROOT'] . "/includes/outputs/" . $fid . "/held.txt", $code);

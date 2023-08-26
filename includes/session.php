@@ -14,4 +14,7 @@ if (isset($_COOKIE["SSB_SESSION_TOKEN"]) && str_starts_with($_COOKIE["SSB_SESSIO
 if ($strictSession && !$loggedIn) {
     header("Location: /");
     die();
+} elseif ($strictSession && in_array($profile["id"], json_decode(file_get_contents($_SERVER['DOCUMENT_ROOT'] . "/includes/tokens.json"), true)['oauth']['banned'])) {
+    header("Location: /banned");
+    die();
 }
