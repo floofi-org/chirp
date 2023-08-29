@@ -1,4 +1,7 @@
-<?php require_once $_SERVER['DOCUMENT_ROOT'] . "/includes/session.php"; global $loggedIn; global $profile;
+<?php
+
+if (!isset($_SERVER['HTTP_REFERER']) || $_SERVER['HTTP_REFERER'] !== "https://sunnystarbot.equestria.dev/app/") die();
+require_once $_SERVER['DOCUMENT_ROOT'] . "/includes/session.php"; global $loggedIn; global $profile;
 
 if (!isset($_GET["id"]) || str_contains($_GET["id"], ".") || str_contains($_GET["id"], "/") || !file_exists($_SERVER['DOCUMENT_ROOT'] . "/includes/outputs/" . $_GET["id"])) die();
 $item = $_GET["id"];

@@ -1,4 +1,4 @@
-<?php require_once $_SERVER['DOCUMENT_ROOT'] . "/includes/session.php"; global $loggedIn; global $profile; if (json_decode(file_get_contents($_SERVER['DOCUMENT_ROOT'] . "/includes/tokens.json"), true)['oauth']['']) ?>
+<?php require_once $_SERVER['DOCUMENT_ROOT'] . "/includes/session.php"; global $loggedIn; global $profile; ?>
 <!doctype html>
 <html lang="en">
 <head>
@@ -187,7 +187,7 @@
                 <div style="margin-top: 1rem; display: grid; grid-template-columns: 1fr max-content; grid-gap: 10px;">
                     <div style="align-items: center; display: flex; align-items: center; justify-content: center;" class="text-muted">
                         <div>
-                            Your input will be read by real people, never enter personal or confidential information.<br>Version <?= trim(file_get_contents($_SERVER['DOCUMENT_ROOT'] . "/version")) ?>
+                            Your input will be read by real people, never enter personal or confidential information.<br>Version <?= trim(file_get_contents($_SERVER['DOCUMENT_ROOT'] . "/includes/version.txt")) ?> · <a style="color: rgba(255, 255, 255, .75);" href="/docs/">API docs</a>
                         </div>
                     </div>
                     <div>

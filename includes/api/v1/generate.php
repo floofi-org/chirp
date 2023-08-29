@@ -1,7 +1,7 @@
 <?php
 
-if (!isset($_SERVER['HTTP_REFERER']) || $_SERVER['HTTP_REFERER'] !== "https://sunnystarbot.equestria.dev/app/") die();
-if (!isset($_SERVER['HTTP_USER_AGENT']) || (!str_contains($_SERVER['HTTP_USER_AGENT'], "Chrome/") && !str_contains($_SERVER['HTTP_USER_AGENT'], "Safari/") && !str_contains($_SERVER['HTTP_USER_AGENT'], "Firefox/") && !str_contains($_SERVER['HTTP_USER_AGENT'], "Gecko"))) die();
+require_once $_SERVER['DOCUMENT_ROOT'] . "/includes/updates.php";
+global $profile;
 
 function uuid() {
     $data = random_bytes(16);
@@ -11,9 +11,14 @@ function uuid() {
     return vsprintf('%s%s-%s-%s-%s-%s%s%s', str_split(bin2hex($data), 4));
 }
 
-require_once $_SERVER['DOCUMENT_ROOT'] . "/includes/updates.php"; global $loggedIn; global $profile;
-require_once $_SERVER['DOCUMENT_ROOT'] . "/includes/session.php"; global $loggedIn; global $profile;
-if (!isset($_GET["text"])) die("false");
+endpoint(["POST"], false, [
+    "input" => [
+        "length" => 160,
+        "required" => true,
+        "post" => true
+    ]
+], true);
+
 $possible = true;
 
 foreach (array_filter(scandir($_SERVER['DOCUMENT_ROOT'] . "/includes/outputs"), function ($i) { return !str_starts_with($i, "."); }) as $item) {
@@ -24,26 +29,13 @@ foreach (array_filter(scandir($_SERVER['DOCUMENT_ROOT'] . "/includes/outputs"), 
     }
 }
 
-if (!$possible) die("true");
+if (!$possible || !getPossible()) error(429);
 
-if (!isset($_GET["token"])) {
-    die("true");
-} else {
-    require_once $_SERVER['DOCUMENT_ROOT'] . "/includes/recaptcha/src/autoload.php";
-
-    $recaptcha = new \ReCaptcha\ReCaptcha(json_decode(file_get_contents($_SERVER['DOCUMENT_ROOT'] . "/includes/tokens.json"), true)["recaptcha"]["secret"]);
-    $resp = $recaptcha->setExpectedHostname("sunnystarbot.equestria.dev")
-        ->verify($_GET["token"], $_SERVER['HTTP_X_FORWARDED_FOR'] ?? $_SERVER['REMOTE_ADDR']);
-    if (!$resp->isSuccess()) {
-        die("true");
-    }
-}
-
-$code = getFilterCode($_GET["text"]);
+$code = getFilterCode($_POST["input"]);
 
 // ---------------------------
 
-$modelText = substr(trim(preg_replace("/[^a-zA-Z':\d()[\].?!]/", "", $_GET["text"] ?? "")), 0, 160);
+$modelText = substr(trim(preg_replace("/[^a-zA-Z':\d()[\].?!]/", "", $_POST["input"] ?? "")), 0, 160);
 $uid = uuid();
 $fid = str_replace("-", "", uuid() . "-" . $profile["id"] . "-" . $uid);
 
@@ -54,7 +46,7 @@ while (file_exists($_SERVER['DOCUMENT_ROOT'] . "/includes/outputs/" . $fid)) {
 mkdir($_SERVER['DOCUMENT_ROOT'] . "/includes/outputs/" . $fid);
 file_put_contents($_SERVER['DOCUMENT_ROOT'] . "/includes/outputs/" . $fid . "/author.txt", $profile["id"]);
 file_put_contents($_SERVER['DOCUMENT_ROOT'] . "/includes/outputs/" . $fid . "/timestamp.txt", time());
-file_put_contents($_SERVER['DOCUMENT_ROOT'] . "/includes/outputs/" . $fid . "/input_orig.txt", substr(trim($_GET["text"] ?? ""), 0, 160));
+file_put_contents($_SERVER['DOCUMENT_ROOT'] . "/includes/outputs/" . $fid . "/input_orig.txt", substr(trim($_POST["input"] ?? ""), 0, 160));
 
 if ($profile["id"] === json_decode(file_get_contents($_SERVER['DOCUMENT_ROOT'] . "/includes/tokens.json"), true)['oauth']['admin']) {
     file_put_contents($_SERVER['DOCUMENT_ROOT'] . "/includes/outputs/" . $fid . "/reviewed.txt", "");
@@ -71,7 +63,9 @@ if ($code < 2) {
 }
 
 if ($code > 1) {
-    die("false");
+    error(451);
 } else {
-    die(json_encode($fid));
+    output([
+        "id" => $fid
+    ]);
 }
