@@ -23,10 +23,23 @@ if (isset($parts[2])) {
         output(getList(true, $parts[2]));
     }
 } else {
-    endpoint();
+    endpoint(["GET"], false, [
+        "amount" => [
+            "required" => false,
+            "post" => false
+        ]
+    ]);
+
+    if (isset($_GET["amount"]) && is_numeric($_GET["amount"]) && (int)$_GET["amount"] == (float)$_GET["amount"]) {
+        $list = getList(true, null, (int)($_GET["amount"]));
+    } elseif (isset($_GET["amount"])) {
+        error(400);
+    } else {
+        $list = getList(true);
+    }
 
     output([
-        "history" => getList(true),
-        "count" => count(getList())
+        "history" => $list,
+        "count" => count($list)
     ]);
 }

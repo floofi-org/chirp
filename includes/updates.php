@@ -1,6 +1,6 @@
 <?php
 
-function getList($api = false, $id = null) {
+function getList($api = false, $id = null, $max = INF) {
     global $profile;
     $data = [];
 
@@ -21,6 +21,8 @@ function getList($api = false, $id = null) {
             error(404);
         }
     }
+
+    $index = 0;
 
     foreach (array_filter(scandir($_SERVER['DOCUMENT_ROOT'] . "/includes/outputs"), function ($i) { return !str_starts_with($i, "."); }) as $item) {
         if (file_exists($_SERVER['DOCUMENT_ROOT'] . "/includes/outputs/" . $item . "/author.txt") && file_exists($_SERVER['DOCUMENT_ROOT'] . "/includes/outputs/" . $item . "/input_orig.txt") && !file_exists($_SERVER['DOCUMENT_ROOT'] . "/includes/outputs/" . $item . "/blocked.txt")) {
@@ -54,7 +56,7 @@ function getList($api = false, $id = null) {
         return strtotime($b["time"]) - strtotime($a["time"]);
     });
 
-    return $data;
+    return array_slice($data, 0, $max < INF ? $max : null);
 }
 
 function getPossible() {

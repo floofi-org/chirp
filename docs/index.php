@@ -170,7 +170,7 @@ output: any|null
             <tr>
                 <td><code>GET</code></td>
                 <td>/v1/history</td>
-                <td>-</td>
+                <td>URL: <code>amount</code>: number (optional)</td>
                 <td>Get previous generations associated with this account.</td>
                 <td><pre>[
     {
