@@ -43,7 +43,7 @@ $code = getFilterCode($_GET["text"]);
 
 // ---------------------------
 
-$modelText = substr(trim(preg_replace("/[^a-zA-Z':\d()[\].?!]/", "", $_GET["text"] ?? "")), 0, 160);
+$modelText = substr(trim(preg_replace("/[^a-zA-Z':\d()[\].?! ~]/", "", $_GET["text"] ?? "")), 0, 160);
 $uid = uuid();
 $fid = str_replace("-", "", uuid() . "-" . $profile["id"] . "-" . $uid);
 

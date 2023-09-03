@@ -1,3 +1,6 @@
 #!/bin/bash
 source ./venv/bin/activate
-python3 $PWD/main.py
+
+while true; do
+  python3 $PWD/main.py
+done
