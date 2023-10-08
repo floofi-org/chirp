@@ -1,6 +1,7 @@
-includes/tokens.json
+gitincludes/tokens.json
 includes/runtime/venv
 includes/runtime/MLPTTS
+includes/runtime/MLPTTS*
 includes/list.txt
 includes/runtime/TTS-TT2
 includes/runtime/hifi-gan
