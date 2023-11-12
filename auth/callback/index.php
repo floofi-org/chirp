@@ -44,9 +44,7 @@ if (isset($result["access_token"])) {
     $result = $result_orig = curl_exec($crl);
     $result = json_decode($result, true);
 
-    $isAllowed = in_array("afe14113-ec23-49db-8c28-d39a861eef8f", array_map(function ($i) { return $i["id"]; }, $result["transitiveGroups"]));
-
-    if ($appdata["oauth"]["private"] && !$isAllowed) {
+    if ($appdata["oauth"]["private"] && !in_array($result["id"], $appdata["oauth"]["allowed"])) {
         header("Location: /denied/?user=" . rawurlencode(base64_encode($result["login"] . " (" . $result["profile"]["email"]["email"] . ")")));
         die();
     }

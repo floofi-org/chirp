@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Sunny Starbot</title>
-    <script src="/assets/recaptcha.js"></script>
+    <script src="https://www.google.com/recaptcha/api.js?render=<?= json_decode(file_get_contents($_SERVER['DOCUMENT_ROOT'] . "/includes/tokens.json"), true)["recaptcha"]["site"] ?>"></script>
     <link href="/assets/bootstrap.min.css" rel="stylesheet">
     <script src="/assets/bootstrap.min.js"></script>
     <style>
