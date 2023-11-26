@@ -175,6 +175,7 @@ output: any|null
                 <td><pre>[
     {
         "id": string,
+        "version": string,
         "author": string,
         "status": generation-status,
         "input": string,
@@ -190,6 +191,7 @@ output: any|null
                 <td>Get a specific generation from its ID.</td>
                 <td><pre>{
     "id": string,
+    "version": string,
     "author": string,
     "status": generation-status,
     "input": string,
@@ -204,6 +206,7 @@ output: any|null
                 <td>Remove a specific generation from your history using its ID.</td>
                 <td><pre>{
     "id": string,
+    "version": string,
     "author": string,
     "status": "removed",
     "input": string,

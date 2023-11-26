@@ -9,7 +9,7 @@
             <mapping deploy="/pool/web/sunnystarbot" local="$PROJECT_DIR$" web="/" />
           </mappings>
           <excludedPaths>
-            <excludedPath local="true" path="/Volumes/Projects/sunnystarbot/includes/runtime/venv" />
+            <excludedPath local="true" path="$PROJECT_DIR$/includes/runtime/venv" />
           </excludedPaths>
         </serverdata>
       </paths>
@@ -20,6 +20,8 @@
           </mappings>
           <excludedPaths>
             <excludedPath local="true" path="$PROJECT_DIR$/includes/runtime/venv" />
+            <excludedPath local="true" path="$PROJECT_DIR$/includes/runtime/outputs" />
+            <excludedPath local="true" path="$PROJECT_DIR$/includes/runtime/versions" />
           </excludedPaths>
         </serverdata>
       </paths>

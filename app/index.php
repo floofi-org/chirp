@@ -43,7 +43,7 @@
         }
 
 
-        @media (max-width: 767px) {
+        @media (max-width: 992px) {
             #mobile-separator { display: block; }
             #panes { grid-template-columns: 1fr !important; grid-gap: 0 !important; }
             #pane-left, #pane-right { order: 0 !important; }
@@ -370,9 +370,9 @@
                                     if (!document.getElementById("history-" + item.id)) {
                                         document.getElementById("list").insertAdjacentHTML(index === 0 ? "afterbegin" : "beforeend", `
                                                 <div id="history-${item.id}" class="list-group-item">
-                                                    <div style="display: grid; grid-template-columns: 4fr 1fr; margin-bottom: 10px;">
+                                                    <div style="display: grid; grid-template-columns: 3fr 2fr; margin-bottom: 10px;">
                                                         <div class="history-prompt" style="white-space: nowrap;overflow: hidden !important;text-overflow: ellipsis;" title="${item.input.replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;")}"><b>${item.input.replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;")}</b></div>
-                                                        <div class="history-time text-muted" style="text-align: right;">${timeAgo(item.time)}</div>
+                                                        <div class="history-time text-muted" style="text-align: right;">${timeAgo(item.time)} · ${item.version}</div>
                                                     </div>
                                                     <div class="history-player" style="display: none; height: 32px;">
                                                         <audio id="history-player-${item.id}"></audio>
@@ -520,7 +520,7 @@
                                         }
                                     }
 
-                                    document.querySelector("#history-" + item.id + " > div > .history-time").innerText = timeAgo(item.time);
+                                    document.querySelector("#history-" + item.id + " > div > .history-time").innerText = timeAgo(item.time) + " · " + item.version;
                                 } else {
                                     if (document.getElementById("history-" + item.id)) {
                                         document.getElementById("history-" + item.id).outerHTML = "";

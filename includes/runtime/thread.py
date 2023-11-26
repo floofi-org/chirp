@@ -98,7 +98,7 @@ def has_MMI(STATE_DICT):
 
 def get_Tactron2(MODEL_ID):
     # Download Tacotron2
-    tacotron2_pretrained_model = 'MLPTTS'
+    tacotron2_pretrained_model = sys.argv[1] if sys.argv[1] is not None else 'MLPTTS'
     if not exists(tacotron2_pretrained_model):
         raise Exception("Tacotron2 model failed to download!")
     # Load Tacotron2 and Config
