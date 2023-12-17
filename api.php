@@ -2,11 +2,6 @@
 
 require_once $_SERVER['DOCUMENT_ROOT'] . "/includes/api/common.php";
 
-if ($_SERVER['HTTP_X_FORWARDED_HOST'] !== "api.sunnystarbot.equestria.dev") {
-    header("Location: /");
-    die();
-}
-
 if (!isset($_GET["_"]) || trim($_GET["_"]) === "") {
     header("Location: https://sunnystarbot.equestria.dev/docs");
     die();

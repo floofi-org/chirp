@@ -4,6 +4,7 @@ includes/runtime/MLPTTS
 includes/runtime/outputs
 includes/runtime/MLPTTS*
 includes/list.txt
+includes/list*
 includes/runtime/TTS-TT2
 includes/runtime/hifi-gan
 includes/runtime/versions

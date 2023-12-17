@@ -2,6 +2,7 @@
 
 if (!isset($_SERVER['HTTP_REFERER']) || $_SERVER['HTTP_REFERER'] !== "https://sunnystarbot.equestria.dev/app/") die();
 if (!isset($_SERVER['HTTP_USER_AGENT']) || (!str_contains($_SERVER['HTTP_USER_AGENT'], "Chrome/") && !str_contains($_SERVER['HTTP_USER_AGENT'], "Safari/") && !str_contains($_SERVER['HTTP_USER_AGENT'], "Firefox/") && !str_contains($_SERVER['HTTP_USER_AGENT'], "Gecko"))) die();
+global $hasPlus;
 
 function uuid() {
     $data = random_bytes(16);
@@ -19,7 +20,7 @@ $possible = true;
 foreach (array_filter(scandir($_SERVER['DOCUMENT_ROOT'] . "/includes/outputs"), function ($i) { return !str_starts_with($i, "."); }) as $item) {
     if (file_exists($_SERVER['DOCUMENT_ROOT'] . "/includes/outputs/" . $item . "/author.txt") && !file_exists($_SERVER['DOCUMENT_ROOT'] . "/includes/outputs/" . $item . "/blocked.txt")) {
         if (file_get_contents($_SERVER['DOCUMENT_ROOT'] . "/includes/outputs/" . $item . "/author.txt") === $profile["id"]) {
-            if (!file_exists($_SERVER['DOCUMENT_ROOT'] . "/includes/outputs/" . $item . "/complete.txt")) $possible = false;
+            if (!(file_exists($_SERVER['DOCUMENT_ROOT'] . "/includes/outputs/" . $item . "/complete.txt") && file_exists($_SERVER['DOCUMENT_ROOT'] . "/includes/outputs/" . $item . "/audio.wav"))) $possible = false;
         }
     }
 }
@@ -43,7 +44,7 @@ $code = getFilterCode($_GET["text"]);
 
 // ---------------------------
 
-$modelText = substr(trim(preg_replace("/[^a-zA-Z':\d()[\].,?! ~]/", "", $_GET["text"] ?? "")), 0, 160);
+$modelText = substr(trim(preg_replace("/[^a-zA-Z':\d()[\].,?;\"! ~]/", "", $_GET["text"] ?? "")), 0, $hasPlus ? 320 : 160);
 $uid = uuid();
 $fid = str_replace("-", "", uuid() . "-" . $profile["id"] . "-" . $uid);
 
@@ -54,9 +55,9 @@ while (file_exists($_SERVER['DOCUMENT_ROOT'] . "/includes/outputs/" . $fid)) {
 mkdir($_SERVER['DOCUMENT_ROOT'] . "/includes/outputs/" . $fid);
 file_put_contents($_SERVER['DOCUMENT_ROOT'] . "/includes/outputs/" . $fid . "/author.txt", $profile["id"]);
 file_put_contents($_SERVER['DOCUMENT_ROOT'] . "/includes/outputs/" . $fid . "/timestamp.txt", time());
-file_put_contents($_SERVER['DOCUMENT_ROOT'] . "/includes/outputs/" . $fid . "/input_orig.txt", substr(trim($_GET["text"] ?? ""), 0, 160));
+file_put_contents($_SERVER['DOCUMENT_ROOT'] . "/includes/outputs/" . $fid . "/input_orig.txt", substr(trim($_GET["text"] ?? ""), 0, $hasPlus ? 320 : 160));
 
-if ($profile["id"] === json_decode(file_get_contents($_SERVER['DOCUMENT_ROOT'] . "/includes/tokens.json"), true)['oauth']['admin']) {
+if ($profile["id"] === json_decode(file_get_contents($_SERVER['DOCUMENT_ROOT'] . "/includes/tokens.json"), true)['oauth']['admin'] && $code === 0) {
     file_put_contents($_SERVER['DOCUMENT_ROOT'] . "/includes/outputs/" . $fid . "/reviewed.txt", "");
 }
 
@@ -64,10 +65,18 @@ if ($code > 0) {
     file_put_contents($_SERVER['DOCUMENT_ROOT'] . "/includes/outputs/" . $fid . "/held.txt", $code);
 }
 
-file_put_contents($_SERVER['DOCUMENT_ROOT'] . "/includes/outputs/" . $fid . "/version.txt", trim(file_get_contents($_SERVER['DOCUMENT_ROOT'] . "/includes/version.txt")));
+if (isset($hasPlus) && $hasPlus) {
+    file_put_contents($_SERVER['DOCUMENT_ROOT'] . "/includes/outputs/" . $fid . "/version.txt", trim(file_get_contents($_SERVER['DOCUMENT_ROOT'] . "/includes/version-plus.txt")));
+} else {
+    file_put_contents($_SERVER['DOCUMENT_ROOT'] . "/includes/outputs/" . $fid . "/version.txt", trim(file_get_contents($_SERVER['DOCUMENT_ROOT'] . "/includes/version.txt")));
+}
 
 if ($code < 2) {
-    file_put_contents($_SERVER['DOCUMENT_ROOT'] . "/includes/outputs/" . $fid . "/input.txt", $modelText);
+    if ($hasPlus) {
+        file_put_contents($_SERVER['DOCUMENT_ROOT'] . "/includes/outputs/" . $fid . "/input_plus.txt", $modelText);
+    } else {
+        file_put_contents($_SERVER['DOCUMENT_ROOT'] . "/includes/outputs/" . $fid . "/input.txt", $modelText);
+    }
 } else {
     file_put_contents($_SERVER['DOCUMENT_ROOT'] . "/includes/outputs/" . $fid . "/blocked.txt", "");
 }

@@ -1,11 +1,11 @@
-<?php require_once $_SERVER['DOCUMENT_ROOT'] . "/includes/session.php"; global $loggedIn; global $profile; ?>
+<?php require_once $_SERVER['DOCUMENT_ROOT'] . "/includes/session.php"; global $loggedIn; global $profile; global $hasPlus; ?>
 <!doctype html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Sunny Starbot</title>
+    <title>Sunny Starbot<?= $hasPlus ? " (Plus)" : '' ?></title>
     <script src="https://www.google.com/recaptcha/api.js?render=<?= json_decode(file_get_contents($_SERVER['DOCUMENT_ROOT'] . "/includes/tokens.json"), true)["recaptcha"]["site"] ?>"></script>
     <link href="/assets/bootstrap.min.css" rel="stylesheet">
     <script src="/assets/bootstrap.min.js"></script>
@@ -168,13 +168,21 @@
         .history-player-action:active img {
             background-color: rgba(0, 0, 0, .25);
         }
+
+        .explicit {
+            filter: blur(10px);
+        }
+
+        .explicit:hover, .explicit:active {
+            filter: none !important;
+        }
     </style>
     <link rel="shortcut icon" href="/assets/favicon.svg" type="image/svg+xml">
 </head>
 <body style="background-image: url('/assets/bg.png'); background-size: cover; background-position: center; background-attachment: fixed; background-color: #feaf91;">
 <br><br>
 
-<main class="container" style="background-color: #9c1d96; color: white; border-radius: 30px; padding: 30px;">
+<main class="container" style="border: 5px solid <?= $hasPlus ? "#fe9d6c" : "#9c1d96" ?>; background-color: #9c1d96; color: white; border-radius: 30px; padding: 30px;">
     <img src="/assets/banner.png" alt="Sunny Starbot" style="width: 100%; max-width: 768px; display: block; margin-left: auto; margin-right: auto; margin-bottom: 30px;">
 
     <div style="display: grid; grid-template-columns: 1fr 1fr; grid-gap: 30px;" id="panes">
@@ -187,7 +195,7 @@
                 <div style="margin-top: 1rem; display: grid; grid-template-columns: 1fr max-content; grid-gap: 10px;">
                     <div style="align-items: center; display: flex; align-items: center; justify-content: center;" class="text-muted">
                         <div>
-                            Your input will be read by real people, never enter personal or confidential information.<br>Version <?= trim(file_get_contents($_SERVER['DOCUMENT_ROOT'] . "/includes/version.txt")) ?> · <a style="color: rgba(255, 255, 255, .75);" href="/docs/">API docs</a>
+                            <p>Your input will be read by real people, never enter personal or confidential information.</p>Version <?= $hasPlus ? trim(file_get_contents($_SERVER['DOCUMENT_ROOT'] . "/includes/version-plus.txt")) : trim(file_get_contents($_SERVER['DOCUMENT_ROOT'] . "/includes/version.txt")) ?><br><a style="color: rgba(255, 255, 255, .75);" href="/docs/">API docs</a> · <?php if ($hasPlus): ?>Using Sunny Starbot Plus<?php else: ?><a style="color: rgba(255, 255, 255, .75);" href="/plus/">Get Sunny Starbot Plus</a><?php endif; ?>
                         </div>
                     </div>
                     <div>
@@ -199,11 +207,11 @@
                     <ol style="padding-left: 20px; margin: 0;">
                         <li>Credit "Sunny Starbot"</li>
                         <li>Don't mix with other TTS</li>
-                        <li>Keep it family-friendly</li>
+                        <li><?= $hasPlus ? "Keep it legal and respectful" : "Keep it family-friendly" ?></li>
                     </ol>
                 </div>
 
-                <img src="/assets/sunny.png" style="max-width: 75%; margin-left: auto; display: block; margin-right: -30px;">
+                <img src="/assets/sunny.png" style="max-width: 75%; margin-left: auto; display: block; margin-right: -35px;">
 
                 <script>
                     window.processing = false;
@@ -376,7 +384,7 @@
                                                     </div>
                                                     <div class="history-player" style="display: none; height: 32px;">
                                                         <audio id="history-player-${item.id}"></audio>
-                                                        <div style="height: 32px; background-color: #b14eab; border-radius: 999px; display: grid; grid-template-columns: 32px 1fr 32px 32px; padding: 0 10px;">
+                                                        <div style="height: 32px; background-color: #b14eab; border-radius: 999px; display: grid; grid-template-columns: 32px 1fr 32px 32px; padding: 0 10px;" <?php if ($hasPlus): ?>id="history-region-${item.id}"<?php endif; ?>">
                                                             <a title="Play" id="history-player-${item.id}-action" class="history-player-action" style="display: inline-block; height: 32px; width: 32px; padding: 4px; cursor: pointer; margin-top: -4px;" onclick="playerAction('${item.id}');">
                                                                 <img src="/assets/play.svg" style="display: inline-block; filter: invert(1); height: 32px; width: 32px; padding: 4px; border-radius: 999px;" alt="Play" id="history-player-${item.id}-play">
                                                                 <img src="/assets/stop.svg" style="display: none; filter: invert(1); height: 32px; width: 32px; padding: 4px; border-radius: 999px;" alt="Stop" id="history-player-${item.id}-stop">
@@ -394,6 +402,9 @@
                                                             </a>
                                                         </div>
                                                     </div>
+                                                    <?php if ($hasPlus): ?>
+                                                    <div id="history-plus-${item.id}"></div>
+                                                    <?php endif; ?>
                                                     <div class="history-loading" style="display: none; height: 32px;">
                                                         <img src="/assets/favicon-mono.svg" style="height: 32px;animation-duration: 1s;width: 32px;animation-name: pulse;animation-timing-function: linear;animation-iteration-count: infinite;animation-direction: alternate;" alt="" class="load-icon">
                                                         <span class="history-loading-text" style="margin-left: 10px;vertical-align: middle;">...</span>
@@ -434,88 +445,118 @@
                                         }
                                     }
 
+                                    if (item.explicit) {
+                                        if (document.querySelector("#history-" + item.id + " .history-prompt")) document.querySelector("#history-" + item.id + " .history-prompt").classList.add("explicit");
+                                    } else {
+                                        if (document.querySelector("#history-" + item.id + " .history-prompt")) document.querySelector("#history-" + item.id + " .history-prompt").classList.remove("explicit");
+                                    }
+
                                     if (item.processed) {
+                                        if (document.getElementById("history-plus-" + item.id) && document.getElementById("history-plus-" + item.id).innerHTML.trim() === "") {
+                                            document.getElementById("history-region-" + item.id).style.borderRadius = "15px 15px 0 0";
+
+                                            document.getElementById("history-plus-" + item.id).innerHTML = `
+                                            <img src="/static/${item.id}/figure.png" style="display: none;" id="img-${item.id}" alt="">
+                                            <div style="display: grid; grid-template-columns: 1fr 1fr; grid-gap: 10px; background-color: #b14eab; padding: 10px 20px 20px; border-bottom-left-radius: 15px; border-bottom-right-radius: 15px;">
+                                                <canvas width="317" height="231" id="canvas-${item.id}-1" style="border-radius: 10px; width: 100%;"></canvas>
+                                                <canvas width="317" height="231" id="canvas-${item.id}-2" style="border-radius: 10px; width: 100%;"></canvas>
+                                            </div>
+                                            `;
+
+                                            document.getElementById("img-" + item.id).onload = () => {
+                                                let canvas = document.getElementById('canvas-' + item.id + '-1');
+                                                let ctx = canvas.getContext('2d');
+                                                ctx.drawImage(document.getElementById("img-" + item.id), 114, 37, 316, 230, 0, 0, 316, 230);
+
+                                                canvas = document.getElementById('canvas-' + item.id + '-2');
+                                                ctx = canvas.getContext('2d');
+                                                ctx.drawImage(document.getElementById("img-" + item.id), 494, 37, 316, 230, 0, 0, 494, 230);
+                                            }
+                                        }
+
                                         document.querySelector("#history-" + item.id + " > .history-player").style.display = "";
-                                        document.querySelector("#history-" + item.id + " > .history-loading").style.display = "none";
+                                        if (document.querySelector("#history-" + item.id + " > .history-loading")) document.querySelector("#history-" + item.id + " > .history-loading").style.display = "none";
 
                                         if (document.querySelector("#history-" + item.id + " > .history-player > audio").src.trim() === "") {
                                             document.querySelector("#history-" + item.id + " > .history-player > audio").src = "/static/" + item.id + "/audio.wav";
                                         }
                                     } else {
                                         document.querySelector("#history-" + item.id + " > .history-player").style.display = "none";
-                                        document.querySelector("#history-" + item.id + " > .history-loading").style.display = "";
+                                        if (document.querySelector("#history-" + item.id + " > .history-loading")) {
+                                            document.querySelector("#history-" + item.id + " > .history-loading").style.display = "";
 
-                                        if (item.crashed) {
-                                            document.querySelector("#history-" + item.id + " > .history-loading > .history-loading-text").innerText = "That didn't quite work... We can try that again!";
-                                        } else if (item.queued) {
-                                            document.querySelector("#history-" + item.id + " > .history-loading > .history-loading-text").innerText = "We're out of glitter! Be right back!";
-                                        } else {
-                                            let n = parseInt(item.id.substring(0, 1), 16);
+                                            if (item.crashed) {
+                                                document.querySelector("#history-" + item.id + " > .history-loading > .history-loading-text").innerText = "That didn't quite work... We can try that again!";
+                                            } else if (item.queued) {
+                                                document.querySelector("#history-" + item.id + " > .history-loading > .history-loading-text").innerText = "We're out of glitter! Be right back!";
+                                            } else {
+                                                let n = parseInt(item.id.substring(0, 1), 16);
 
-                                            switch (n) {
-                                                default:
-                                                    document.querySelector("#history-" + item.id + " > .history-loading > .history-loading-text").innerText = "Finding your sparkle...";
-                                                    break;
+                                                switch (n) {
+                                                    default:
+                                                        document.querySelector("#history-" + item.id + " > .history-loading > .history-loading-text").innerText = "Finding your sparkle...";
+                                                        break;
 
-                                                case 1:
-                                                    document.querySelector("#history-" + item.id + " > .history-loading > .history-loading-text").innerText = "Making your mark...";
-                                                    break;
+                                                    case 1:
+                                                        document.querySelector("#history-" + item.id + " > .history-loading > .history-loading-text").innerText = "Making your mark...";
+                                                        break;
 
-                                                case 2:
-                                                    document.querySelector("#history-" + item.id + " > .history-loading > .history-loading-text").innerText = "Putting hooves together...";
-                                                    break;
+                                                    case 2:
+                                                        document.querySelector("#history-" + item.id + " > .history-loading > .history-loading-text").innerText = "Putting hooves together...";
+                                                        break;
 
-                                                case 3:
-                                                    document.querySelector("#history-" + item.id + " > .history-loading > .history-loading-text").innerText = "Giving you a twist...";
-                                                    break;
+                                                    case 3:
+                                                        document.querySelector("#history-" + item.id + " > .history-loading > .history-loading-text").innerText = "Giving you a twist...";
+                                                        break;
 
-                                                case 4:
-                                                    document.querySelector("#history-" + item.id + " > .history-loading > .history-loading-text").innerText = "Letting your mane down...";
-                                                    break;
+                                                    case 4:
+                                                        document.querySelector("#history-" + item.id + " > .history-loading > .history-loading-text").innerText = "Letting your mane down...";
+                                                        break;
 
-                                                case 5:
-                                                    document.querySelector("#history-" + item.id + " > .history-loading > .history-loading-text").innerText = "Busting a hoof...";
-                                                    break;
+                                                    case 5:
+                                                        document.querySelector("#history-" + item.id + " > .history-loading > .history-loading-text").innerText = "Busting a hoof...";
+                                                        break;
 
-                                                case 6:
-                                                    document.querySelector("#history-" + item.id + " > .history-loading > .history-loading-text").innerText = "Showing you pony moves...";
-                                                    break;
+                                                    case 6:
+                                                        document.querySelector("#history-" + item.id + " > .history-loading > .history-loading-text").innerText = "Showing you pony moves...";
+                                                        break;
 
-                                                case 7:
-                                                    document.querySelector("#history-" + item.id + " > .history-loading > .history-loading-text").innerText = "Coming together...";
-                                                    break;
+                                                    case 7:
+                                                        document.querySelector("#history-" + item.id + " > .history-loading > .history-loading-text").innerText = "Coming together...";
+                                                        break;
 
-                                                case 8:
-                                                    document.querySelector("#history-" + item.id + " > .history-loading > .history-loading-text").innerText = "Lifting up your hooves...";
-                                                    break;
+                                                    case 8:
+                                                        document.querySelector("#history-" + item.id + " > .history-loading > .history-loading-text").innerText = "Lifting up your hooves...";
+                                                        break;
 
-                                                case 9:
-                                                    document.querySelector("#history-" + item.id + " > .history-loading > .history-loading-text").innerText = "Galloping across Equestria...";
-                                                    break;
+                                                    case 9:
+                                                        document.querySelector("#history-" + item.id + " > .history-loading > .history-loading-text").innerText = "Galloping across Equestria...";
+                                                        break;
 
-                                                case 10:
-                                                    document.querySelector("#history-" + item.id + " > .history-loading > .history-loading-text").innerText = "Spreading love from you to me...";
-                                                    break;
+                                                    case 10:
+                                                        document.querySelector("#history-" + item.id + " > .history-loading > .history-loading-text").innerText = "Spreading love from you to me...";
+                                                        break;
 
-                                                case 11:
-                                                    document.querySelector("#history-" + item.id + " > .history-loading > .history-loading-text").innerText = "Working together...";
-                                                    break;
+                                                    case 11:
+                                                        document.querySelector("#history-" + item.id + " > .history-loading > .history-loading-text").innerText = "Working together...";
+                                                        break;
 
-                                                case 12:
-                                                    document.querySelector("#history-" + item.id + " > .history-loading > .history-loading-text").innerText = "Taking a look a little closer...";
-                                                    break;
+                                                    case 12:
+                                                        document.querySelector("#history-" + item.id + " > .history-loading > .history-loading-text").innerText = "Taking a look a little closer...";
+                                                        break;
 
-                                                case 13:
-                                                    document.querySelector("#history-" + item.id + " > .history-loading > .history-loading-text").innerText = "Making you sparkle again...";
-                                                    break;
+                                                    case 13:
+                                                        document.querySelector("#history-" + item.id + " > .history-loading > .history-loading-text").innerText = "Making you sparkle again...";
+                                                        break;
 
-                                                case 14:
-                                                    document.querySelector("#history-" + item.id + " > .history-loading > .history-loading-text").innerText = "Reigniting your spark...";
-                                                    break;
+                                                    case 14:
+                                                        document.querySelector("#history-" + item.id + " > .history-loading > .history-loading-text").innerText = "Reigniting your spark...";
+                                                        break;
 
-                                                case 15:
-                                                    document.querySelector("#history-" + item.id + " > .history-loading > .history-loading-text").innerText = "Not forgetting about your friends...";
-                                                    break;
+                                                    case 15:
+                                                        document.querySelector("#history-" + item.id + " > .history-loading > .history-loading-text").innerText = "Not forgetting about your friends...";
+                                                        break;
+                                                }
                                             }
                                         }
                                     }
@@ -589,7 +630,8 @@
                 <hr>
                 <p>These terms of use govern your use of the Sunny Starbot project and any access to the Sunny Starbot AI model you might have access to. It is considered that you have read and agreed to the following as soon as you start using Sunny Starbot. These terms of use complement the <a style="color: white;" href="https://equestria.dev/legal/terms-of-service/" target="_blank">Equestria.dev Online Services Terms of Service</a> for the case of Sunny Starbot only.</p>
                 <p>Users are granted exclusive limited access to Sunny Starbot that may be revoked at any time at the administrators' sole discretion, regardless of a breach in the following terms of use or not. To ensure respect of these terms, Equestria.dev will store and manually review all requests made to the service, including blocked requests, and even if they have been removed from your history.</p>
-                <p>Content generated through the use of Sunny Starbot must remain family-friendly and not cause harm to anyone, and, in case such content is shared, must credit "Sunny Starbot" or "Equestria.dev" and not be mixed with other text-to-speech engines to avoid confusion. This means violent, explicit, vulgar, religious, political, or other harmful content is not allowed. Impersonation, or claiming to be an official Hasbro content or entity, is not allowed.</p>
+                <p><b>For Sunny Starbot Plus users:</b> Content generated through the use of Sunny Starbot must remain legal, respectful, and not cause harm to anyone, and, in case such content is shared, must credit "Sunny Starbot" or "Equestria.dev" and not be mixed with other text-to-speech engines to avoid confusion. This means violent, vulgar, religious, political, or other harmful content is not allowed. Impersonation, or claiming to be an official Hasbro content or entity, is not allowed.</p>
+                <p><b>For non-Sunny Starbot Plus users:</b> Content generated through the use of Sunny Starbot must remain family-friendly and not cause harm to anyone, and, in case such content is shared, must credit "Sunny Starbot" or "Equestria.dev" and not be mixed with other text-to-speech engines to avoid confusion. This means violent, explicit, vulgar, religious, political, or other harmful content is not allowed. Impersonation, or claiming to be an official Hasbro content or entity, is not allowed.</p>
                 <div>Sunny Starbot runs on limited resources, therefore, users must use the service in a fair and non-abusive way. With that said, any use of automated software (or "bots") to generate content automatically is not allowed. Sunny Starbot makes use of Google's reCAPTCHA technology as well as rate limits to accomplish automatic blocking of bots. Users who make an excessive number of requests, even without using automated software, may also be acted upon.</div>
             </div>
         </div>

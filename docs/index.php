@@ -139,7 +139,7 @@ output: any|null
     </table>
 
     <h3>Endpoints</h3>
-    <p>All API endpoints take root in https://api.sunnystarbot.equestria.dev.</p>
+    <p>All API endpoints take root in https://sunnystarbot.equestria.dev/api (<b>warning:</b> api.sunnystarbot.equestria.dev is not used anymore).</p>
     <table class="table">
         <thead>
             <tr>
@@ -161,8 +161,10 @@ output: any|null
     "version": string,
     "processingUnits": [
         {
+            "id": string,
             "pid": number,
-            "busy": boolean
+            "busy": boolean,
+            "plus": boolean
         }
     ]
 }</pre></td>
@@ -180,7 +182,8 @@ output: any|null
         "status": generation-status,
         "input": string,
         "filename": string,
-        "audio_url": string?
+        "audio_url": string?,
+        "explicit": boolean
     }
 ]</pre></td>
             </tr>
@@ -196,7 +199,8 @@ output: any|null
     "status": generation-status,
     "input": string,
     "filename": string,
-    "audio_url": string?
+    "audio_url": string?,
+    "explicit": boolean
 }</pre></td>
             </tr>
             <tr>
@@ -211,7 +215,8 @@ output: any|null
     "status": "removed",
     "input": string,
     "filename": string,
-    "audio_url": null
+    "audio_url": null,
+    "explicit": boolean
 }</pre></td>
             </tr>
             <tr>

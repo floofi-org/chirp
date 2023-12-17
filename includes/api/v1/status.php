@@ -22,6 +22,7 @@ output([
     "user" => $user,
     "version" => file_get_contents($_SERVER['DOCUMENT_ROOT'] . "/includes/version.txt"),
     "processingUnits" => array_map(function ($pid) {
+        $plus = false;
         $busy = false;
 
         foreach (array_filter(scandir($_SERVER['DOCUMENT_ROOT'] . "/includes/outputs"), function ($i) { return !str_starts_with($i, "."); }) as $item) {
@@ -35,8 +36,10 @@ output([
         }
 
         return [
+            "id" => "01-$pid",
             "pid" => $pid,
-            "busy" => $busy
+            "busy" => $busy,
+            "plus" => $plus
         ];
     }, getProcessingUnits())
 ]);

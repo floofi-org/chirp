@@ -1,7 +1,7 @@
 <?php
 
 require_once $_SERVER['DOCUMENT_ROOT'] . "/includes/updates.php";
-global $profile;
+global $profile; global $hasPlus;
 
 function uuid() {
     $data = random_bytes(16);
@@ -13,7 +13,7 @@ function uuid() {
 
 endpoint(["POST"], false, [
     "input" => [
-        "length" => 160,
+        "length" => $hasPlus ? 320 : 160,
         "required" => true,
         "post" => true
     ]
@@ -24,7 +24,7 @@ $possible = true;
 foreach (array_filter(scandir($_SERVER['DOCUMENT_ROOT'] . "/includes/outputs"), function ($i) { return !str_starts_with($i, "."); }) as $item) {
     if (file_exists($_SERVER['DOCUMENT_ROOT'] . "/includes/outputs/" . $item . "/author.txt") && !file_exists($_SERVER['DOCUMENT_ROOT'] . "/includes/outputs/" . $item . "/blocked.txt")) {
         if (file_get_contents($_SERVER['DOCUMENT_ROOT'] . "/includes/outputs/" . $item . "/author.txt") === $profile["id"]) {
-            if (!file_exists($_SERVER['DOCUMENT_ROOT'] . "/includes/outputs/" . $item . "/complete.txt")) $possible = false;
+            if (!(file_exists($_SERVER['DOCUMENT_ROOT'] . "/includes/outputs/" . $item . "/complete.txt") && file_exists($_SERVER['DOCUMENT_ROOT'] . "/includes/outputs/" . $item . "/audio.wav"))) $possible = false;
         }
     }
 }
@@ -57,7 +57,11 @@ if ($code > 0) {
 }
 
 if ($code < 2) {
-    file_put_contents($_SERVER['DOCUMENT_ROOT'] . "/includes/outputs/" . $fid . "/input.txt", $modelText);
+    if ($hasPlus) {
+        file_put_contents($_SERVER['DOCUMENT_ROOT'] . "/includes/outputs/" . $fid . "/input_plus.txt", $modelText);
+    } else {
+        file_put_contents($_SERVER['DOCUMENT_ROOT'] . "/includes/outputs/" . $fid . "/input.txt", $modelText);
+    }
 } else {
     file_put_contents($_SERVER['DOCUMENT_ROOT'] . "/includes/outputs/" . $fid . "/blocked.txt", "");
 }
