@@ -30,15 +30,13 @@ if (!$possible) die("true");
 if (!isset($_GET["token"])) {
     die("true");
 } else {
-    if (!$hasPlus) {
-        require_once $_SERVER['DOCUMENT_ROOT'] . "/includes/recaptcha/src/autoload.php";
+    require_once $_SERVER['DOCUMENT_ROOT'] . "/includes/recaptcha/src/autoload.php";
 
-        $recaptcha = new \ReCaptcha\ReCaptcha(json_decode(file_get_contents($_SERVER['DOCUMENT_ROOT'] . "/includes/tokens.json"), true)["recaptcha"]["secret"]);
-        $resp = $recaptcha->setExpectedHostname("sunnystarbot.equestria.dev")
-            ->verify($_GET["token"], $_SERVER['HTTP_X_FORWARDED_FOR'] ?? $_SERVER['REMOTE_ADDR']);
-        if (!$resp->isSuccess()) {
-            die("true");
-        }
+    $recaptcha = new \ReCaptcha\ReCaptcha(json_decode(file_get_contents($_SERVER['DOCUMENT_ROOT'] . "/includes/tokens.json"), true)["recaptcha"]["secret"]);
+    $resp = $recaptcha->setExpectedHostname("sunnystarbot.equestria.dev")
+        ->verify($_GET["token"], $_SERVER['HTTP_X_FORWARDED_FOR'] ?? $_SERVER['REMOTE_ADDR']);
+    if (!$resp->isSuccess()) {
+        die("true");
     }
 }
 
