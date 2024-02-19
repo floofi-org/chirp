@@ -12,7 +12,7 @@ console.log('Sunny Starbot local frontend');
 console.log("(c) Equestria.dev Developers");
 console.log("");
 
-console.log("Available versions:");
+/*console.log("Available versions:");
 let list = fs.readdirSync(__dirname + "/../runtime/versions").sort((a, b) => {
     return parseInt(b.split(".")[0]) - parseInt(a.split(".")[0]);
 });
@@ -57,11 +57,13 @@ function select() {
     });
 }
 
-select();
+select();*/
+
+start("../MLPTTS");
 
 function start(version) {
-    console.log("Model version: " + version);
-    console.log("");
+    /*console.log("Model version: " + version);
+    console.log("");*/
 
     let p = cp.exec("source ./venv/bin/activate; python3 main.py versions/" + version, { stdio: "pipe", cwd: __dirname + "/../runtime" });
     p.on('exit', (code) => {
