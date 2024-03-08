@@ -27,7 +27,7 @@ foreach (array_filter(scandir($_SERVER['DOCUMENT_ROOT'] . "/includes/outputs"), 
 
 if (!$possible) die("true");
 
-if (!isset($_GET["token"])) {
+/*if (!isset($_GET["token"])) {
     die("true");
 } else {
     require_once $_SERVER['DOCUMENT_ROOT'] . "/includes/recaptcha/src/autoload.php";
@@ -38,7 +38,7 @@ if (!isset($_GET["token"])) {
     if (!$resp->isSuccess()) {
         die("true");
     }
-}
+}*/
 
 $code = getFilterCode($_GET["text"]);
 
