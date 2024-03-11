@@ -378,7 +378,7 @@
                                     if (!document.getElementById("history-" + item.id)) {
                                         document.getElementById("list").insertAdjacentHTML(index === 0 ? "afterbegin" : "beforeend", `
                                                 <div id="history-${item.id}" class="list-group-item">
-                                                    <div style="display: grid; grid-template-columns: 3fr 2fr; margin-bottom: 10px;">
+                                                    <div style="display: grid; grid-template-columns: 3fr 2.5fr; margin-bottom: 10px;">
                                                         <div class="history-prompt" style="white-space: nowrap;overflow: hidden !important;text-overflow: ellipsis;" title="${item.input.replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;")}"><b>${item.input.replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;")}</b></div>
                                                         <div class="history-time text-muted" style="text-align: right;">${timeAgo(item.time)} · ${item.version}</div>
                                                     </div>
