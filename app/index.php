@@ -618,7 +618,7 @@
             <div class="modal-body">
                 <b>In short:</b>
                 <ul>
-                    <li>Follow the <a style="color: white;" href="https://equestria.dev/legal/terms-of-service/" target="_blank">Equestria.dev Terms of Service</a></li>
+                    <li>Follow the <a style="color: white;" href="https://equestria.dev/legal/terms/" target="_blank">Equestria.dev Terms of Service</a></li>
                     <li>Credit "Sunny Starbot" and don't mix it with other text-to-speech engines</li>
                     <li>All content is kept and viewed by the administrators</li>
                     <li>Content must be family-friendly</li>
@@ -628,7 +628,7 @@
                 </ul>
 
                 <hr>
-                <p>These terms of use govern your use of the Sunny Starbot project and any access to the Sunny Starbot AI model you might have access to. It is considered that you have read and agreed to the following as soon as you start using Sunny Starbot. These terms of use complement the <a style="color: white;" href="https://equestria.dev/legal/terms-of-service/" target="_blank">Equestria.dev Online Services Terms of Service</a> for the case of Sunny Starbot only.</p>
+                <p>These terms of use govern your use of the Sunny Starbot project and any access to the Sunny Starbot AI model you might have access to. It is considered that you have read and agreed to the following as soon as you start using Sunny Starbot. These terms of use complement the <a style="color: white;" href="https://equestria.dev/legal/terms/" target="_blank">Equestria.dev Online Services Terms of Service</a> for the case of Sunny Starbot only.</p>
                 <p>Users are granted exclusive limited access to Sunny Starbot that may be revoked at any time at the administrators' sole discretion, regardless of a breach in the following terms of use or not. To ensure respect of these terms, Equestria.dev will store and manually review all requests made to the service, including blocked requests, and even if they have been removed from your history.</p>
                 <p><b>For Sunny Starbot Plus users:</b> Content generated through the use of Sunny Starbot must remain legal, respectful, and not cause harm to anyone, and, in case such content is shared, must credit "Sunny Starbot" or "Equestria.dev" and not be mixed with other text-to-speech engines to avoid confusion. This means violent, vulgar, religious, political, or other harmful content is not allowed. Impersonation, or claiming to be an official Hasbro content or entity, is not allowed.</p>
                 <p><b>For non-Sunny Starbot Plus users:</b> Content generated through the use of Sunny Starbot must remain family-friendly and not cause harm to anyone, and, in case such content is shared, must credit "Sunny Starbot" or "Equestria.dev" and not be mixed with other text-to-speech engines to avoid confusion. This means violent, explicit, vulgar, religious, political, or other harmful content is not allowed. Impersonation, or claiming to be an official Hasbro content or entity, is not allowed.</p>

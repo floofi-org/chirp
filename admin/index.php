@@ -83,7 +83,7 @@ function getUserData($id) {
                 <div <?= file_exists($_SERVER['DOCUMENT_ROOT'] . "/includes/outputs/" . $item . "/blocked.txt") ? (file_exists($_SERVER['DOCUMENT_ROOT'] . "/includes/outputs/" . $item . "/held.txt") ? 'class="text-danger"' : 'class="text-warning') : '' ?>><?= str_replace("<", "&lt;", str_replace(">", "&gt;", str_replace("&", "&amp;", file_get_contents($_SERVER['DOCUMENT_ROOT'] . "/includes/outputs/" . $item . "/input_orig.txt")))) ?></div>
                 <div>
                     <?= date('Y-m-d G:i:s e', (int)file_get_contents($_SERVER['DOCUMENT_ROOT'] . "/includes/outputs/" . $item . "/timestamp.txt")) ?><br>
-                    <a href="/admin/reviewed.php?id=<?= $item ?>">Mark as reviewed</a>
+                    <a href="/admin/reviewed.php?id=<?= $item ?>">Mark as reviewed</a> · <a href="https://cdn.equestria.dev/sunnystarbot/content/<?= $item ?>/audio.wav" target="_blank">+</a>
                 </div>
             </div>
         <?php }} ?>
