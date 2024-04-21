@@ -7,4 +7,9 @@ includes/list.txt
 includes/list*
 includes/runtime/TTS-TT2
 includes/runtime/hifi-gan
+includes/runtime/hifimodel_config_32k
+includes/runtime/hifimodel_config_v1
+includes/runtime/__pycache__
 includes/runtime/versions
+includes/keys.json
+includes/permitted.json
