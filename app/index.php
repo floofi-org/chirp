@@ -190,7 +190,7 @@
             <h2 style="margin-bottom: 30px;">Generate something</h2>
 
             <form onsubmit="sendRequest(); return false;">
-                <textarea class="form-control" rows="3" style="resize: none;" id="input" autofocus placeholder="Enter text here." maxlength="160" disabled></textarea>
+                <textarea class="form-control" rows="3" style="resize: none;" id="input" autofocus placeholder="Enter text here." maxlength="<?= $hasPlus ? 320 : 160 ?>" disabled></textarea>
 
                 <div style="margin-top: 1rem; display: grid; grid-template-columns: 1fr max-content; grid-gap: 10px;">
                     <div style="align-items: center; display: flex; align-items: center; justify-content: center;" class="text-muted">

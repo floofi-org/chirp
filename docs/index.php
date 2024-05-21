@@ -46,7 +46,7 @@ function getAPIKey(): string {
 
     <h3>API limits</h3>
     <ul>
-        <li>The <code>generate</code> endpoint requires a special permission. If the application you are making requires using this endpoint, <a href="https://equestria.horse" target="_blank">contact us</a>.</li>
+        <li>The <code>generate</code> endpoint requires a special permission. If the application you are making requires using this endpoint, <a href="https://equestria.dev" target="_blank">contact us</a>.</li>
         <li>All API requests must be authenticated. To get your API key, please check below.</li>
         <li>A single API key and IP address are limited to 10 requests every minute.</li>
         <li>Users making an abusive number of requests and/or using a private API to use Sunny Starbot will get their account terminated.</li>
@@ -93,7 +93,7 @@ output: any|null
             <tr>
                 <td>403</td>
                 <td>Forbidden</td>
-                <td>While this endpoint is functional, you need additional permission to use it. Please <a href="https://equestria.horse" target="_blank">contact us</a> to resolve this.</td>
+                <td>While this endpoint is functional, you need additional permission to use it. Please <a href="https://equestria.dev" target="_blank">contact us</a> to resolve this.</td>
             </tr>
             <tr>
                 <td>404</td>
