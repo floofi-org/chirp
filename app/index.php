@@ -354,7 +354,7 @@
                     function playerDownload(id, name) {
                         let element = document.createElement("a");
                         element.setAttribute("download", name);
-                        element.setAttribute("href", "/static/" + id + "/audio.wav");
+                        element.setAttribute("href", "https://cdn.equestria.dev/sunnystarbot/content/" + id + "/audio.wav");
                         element.click();
                     }
 
@@ -456,7 +456,7 @@
                                             document.getElementById("history-region-" + item.id).style.borderRadius = "15px 15px 0 0";
 
                                             document.getElementById("history-plus-" + item.id).innerHTML = `
-                                            <img src="/static/${item.id}/figure.png" style="display: none;" id="img-${item.id}" alt="">
+                                            <img src="https://cdn.equestria.dev/sunnystarbot/content/${item.id}/figure.png" style="display: none;" id="img-${item.id}" alt="">
                                             <div style="display: grid; grid-template-columns: 1fr 1fr; grid-gap: 10px; background-color: #b14eab; padding: 10px 20px 20px; border-bottom-left-radius: 15px; border-bottom-right-radius: 15px;">
                                                 <canvas width="317" height="231" id="canvas-${item.id}-1" style="border-radius: 10px; width: 100%;"></canvas>
                                                 <canvas width="317" height="231" id="canvas-${item.id}-2" style="border-radius: 10px; width: 100%;"></canvas>
@@ -478,7 +478,7 @@
                                         if (document.querySelector("#history-" + item.id + " > .history-loading")) document.querySelector("#history-" + item.id + " > .history-loading").style.display = "none";
 
                                         if (document.querySelector("#history-" + item.id + " > .history-player > audio").src.trim() === "") {
-                                            document.querySelector("#history-" + item.id + " > .history-player > audio").src = "/static/" + item.id + "/audio.wav";
+                                            document.querySelector("#history-" + item.id + " > .history-player > audio").src = "https://cdn.equestria.dev/sunnystarbot/content/" + item.id + "/audio.wav";
                                         }
                                     } else {
                                         document.querySelector("#history-" + item.id + " > .history-player").style.display = "none";
