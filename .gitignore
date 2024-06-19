@@ -13,3 +13,4 @@ includes/runtime/__pycache__
 includes/runtime/versions
 includes/keys.json
 includes/permitted.json
+includes/recaptcha
