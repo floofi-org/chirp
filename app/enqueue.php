@@ -2,7 +2,6 @@
 
 if (!isset($_SERVER['HTTP_REFERER']) || $_SERVER['HTTP_REFERER'] !== "https://sunnystarbot.equestria.dev/app/") die();
 if (!isset($_SERVER['HTTP_USER_AGENT']) || (!str_contains($_SERVER['HTTP_USER_AGENT'], "Chrome/") && !str_contains($_SERVER['HTTP_USER_AGENT'], "Safari/") && !str_contains($_SERVER['HTTP_USER_AGENT'], "Firefox/") && !str_contains($_SERVER['HTTP_USER_AGENT'], "Gecko"))) die();
-global $hasPlus;
 
 function uuid() {
     $data = random_bytes(16);
@@ -44,7 +43,7 @@ $code = getFilterCode($_GET["text"]);
 
 // ---------------------------
 
-$modelText = substr(trim(preg_replace("/[^a-zA-Z':\d()[\].,?;\"! ~]/", "", $_GET["text"] ?? "")), 0, $hasPlus ? 320 : 160);
+$modelText = substr(trim(preg_replace("/[^a-zA-Z':\d()[\].,?;\"! ~]/", "", $_GET["text"] ?? "")), 0, 160);
 $uid = uuid();
 $fid = str_replace("-", "", uuid() . "-" . $profile["id"] . "-" . $uid);
 
@@ -55,7 +54,7 @@ while (file_exists($_SERVER['DOCUMENT_ROOT'] . "/includes/outputs/" . $fid)) {
 mkdir($_SERVER['DOCUMENT_ROOT'] . "/includes/outputs/" . $fid);
 file_put_contents($_SERVER['DOCUMENT_ROOT'] . "/includes/outputs/" . $fid . "/author.txt", $profile["id"]);
 file_put_contents($_SERVER['DOCUMENT_ROOT'] . "/includes/outputs/" . $fid . "/timestamp.txt", time());
-file_put_contents($_SERVER['DOCUMENT_ROOT'] . "/includes/outputs/" . $fid . "/input_orig.txt", substr(trim($_GET["text"] ?? ""), 0, $hasPlus ? 320 : 160));
+file_put_contents($_SERVER['DOCUMENT_ROOT'] . "/includes/outputs/" . $fid . "/input_orig.txt", substr(trim($_GET["text"] ?? ""), 0, 160));
 
 if ($profile["id"] === json_decode(file_get_contents($_SERVER['DOCUMENT_ROOT'] . "/includes/tokens.json"), true)['oauth']['admin'] && $code === 0) {
     file_put_contents($_SERVER['DOCUMENT_ROOT'] . "/includes/outputs/" . $fid . "/reviewed.txt", "");
@@ -65,18 +64,10 @@ if ($code > 0) {
     file_put_contents($_SERVER['DOCUMENT_ROOT'] . "/includes/outputs/" . $fid . "/held.txt", $code);
 }
 
-if (isset($hasPlus) && $hasPlus) {
-    file_put_contents($_SERVER['DOCUMENT_ROOT'] . "/includes/outputs/" . $fid . "/version.txt", trim(file_get_contents($_SERVER['DOCUMENT_ROOT'] . "/includes/version-plus.txt")));
-} else {
-    file_put_contents($_SERVER['DOCUMENT_ROOT'] . "/includes/outputs/" . $fid . "/version.txt", trim(file_get_contents($_SERVER['DOCUMENT_ROOT'] . "/includes/version.txt")));
-}
+file_put_contents($_SERVER['DOCUMENT_ROOT'] . "/includes/outputs/" . $fid . "/version.txt", trim(file_get_contents($_SERVER['DOCUMENT_ROOT'] . "/includes/version-plus.txt")));
 
 if ($code < 2) {
-    if ($hasPlus) {
-        file_put_contents($_SERVER['DOCUMENT_ROOT'] . "/includes/outputs/" . $fid . "/input_plus.txt", $modelText);
-    } else {
-        file_put_contents($_SERVER['DOCUMENT_ROOT'] . "/includes/outputs/" . $fid . "/input.txt", $modelText);
-    }
+    file_put_contents($_SERVER['DOCUMENT_ROOT'] . "/includes/outputs/" . $fid . "/input_plus.txt", $modelText);
 } else {
     file_put_contents($_SERVER['DOCUMENT_ROOT'] . "/includes/outputs/" . $fid . "/blocked.txt", "");
 }

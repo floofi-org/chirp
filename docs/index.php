@@ -163,8 +163,7 @@ output: any|null
         {
             "id": string,
             "pid": number,
-            "busy": boolean,
-            "plus": boolean
+            "busy": boolean
         }
     ]
 }</pre></td>

@@ -1,7 +1,7 @@
 <?php
 
 require_once $_SERVER['DOCUMENT_ROOT'] . "/includes/updates.php";
-global $profile; global $hasPlus;
+global $profile;
 
 function uuid() {
     $data = random_bytes(16);
@@ -13,7 +13,7 @@ function uuid() {
 
 endpoint(["POST"], false, [
     "input" => [
-        "length" => $hasPlus ? 320 : 160,
+        "length" => 160,
         "required" => true,
         "post" => true
     ]
@@ -57,11 +57,7 @@ if ($code > 0) {
 }
 
 if ($code < 2) {
-    if ($hasPlus) {
-        file_put_contents($_SERVER['DOCUMENT_ROOT'] . "/includes/outputs/" . $fid . "/input_plus.txt", $modelText);
-    } else {
-        file_put_contents($_SERVER['DOCUMENT_ROOT'] . "/includes/outputs/" . $fid . "/input.txt", $modelText);
-    }
+    file_put_contents($_SERVER['DOCUMENT_ROOT'] . "/includes/outputs/" . $fid . "/input_plus.txt", $modelText);
 } else {
     file_put_contents($_SERVER['DOCUMENT_ROOT'] . "/includes/outputs/" . $fid . "/blocked.txt", "");
 }

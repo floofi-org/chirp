@@ -98,17 +98,11 @@ function getPossible() {
 }
 
 function getFilterCode($original) {
-    global $hasPlus;
     $tokens = json_decode(file_get_contents($_SERVER['DOCUMENT_ROOT'] . "/includes/tokens.json"), true);
 
     $text = strtolower(trim($original ?? ""));
 
-    if (isset($hasPlus) && $hasPlus) {
-        $list = explode("\n", trim(strtolower(file_get_contents($_SERVER['DOCUMENT_ROOT'] . "/includes/list-plus.txt"))));
-        $list2 = explode("\n", trim(strtolower(file_get_contents($_SERVER['DOCUMENT_ROOT'] . "/includes/list.txt"))));
-    } else {
-        $list = $list2 = explode("\n", trim(strtolower(file_get_contents($_SERVER['DOCUMENT_ROOT'] . "/includes/list.txt"))));
-    }
+    $list = $list2 = explode("\n", trim(strtolower(file_get_contents($_SERVER['DOCUMENT_ROOT'] . "/includes/list.txt"))));
 
     if ($text === "") {
         die("false");
@@ -146,15 +140,13 @@ function getFilterCode($original) {
         }
     }
 
-    if (!isset($hasPlus) || !$hasPlus) {
-        if (str_contains($text, "~") || trim($ptext) === "ah") {
-            $code = 2;
-            $tripped[] = "~";
-        }
+    if (str_contains($text, "~") || trim($ptext) === "ah") {
+        $code = 2;
+        $tripped[] = "~";
+    }
 
-        if ($code !== 2 && file_get_contents("https://www.purgomalum.com/service/containsprofanity?text=" . rawurlencode($text)) === "true") {
-            $code = 3;
-        }
+    if ($code !== 2 && file_get_contents("https://www.purgomalum.com/service/containsprofanity?text=" . rawurlencode($text)) === "true") {
+        $code = 3;
     }
 
     return $code;
