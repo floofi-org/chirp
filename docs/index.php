@@ -46,10 +46,9 @@ function getAPIKey(): string {
 
     <h3>API limits</h3>
     <ul>
-        <li>The <code>generate</code> endpoint requires a special permission. If the application you are making requires using this endpoint, <a href="https://equestria.dev" target="_blank">contact us</a>.</li>
-        <li>All API requests must be authenticated. To get your API key, please check below.</li>
-        <li>A single API key and IP address are limited to 10 requests every minute.</li>
-        <li>Users making an abusive number of requests and/or using a private API to use Sunny Starbot will get their account terminated.</li>
+        <li>All API requests must be authenticated, either with an interactive session or an API key. To get your API key, please check below.</li>
+        <li>A single user is limited to 2 generations every minute.</li>
+        <li>Users making an abusive number of requests will get their account blocked.</li>
         <li>Remember to follow the terms of use for Sunny Starbot, namely to properly credit your use of the platform as "Sunny Starbot" or "Equestria.dev."</li>
     </ul>
 
@@ -58,7 +57,7 @@ function getAPIKey(): string {
     <ul>
         <li><code id="api-key"><?= getAPIKey() ?></code> · <a onclick="navigator.clipboard.writeText(document.getElementById('api-key').innerText.trim()); return false;" href="#">Copy</a>, <a onclick="return confirm('Are you sure? If you continue, you will need to change your API key in any application that is using it.');" href="/docs/reset.php">Reset</a></li>
     </ul>
-    <p>To authenticate with the API, you need to set the <code>Authorization</code> header to <code>Bearer &lt;API key&gt;</code>. Even if you are logged into Sunny Starbot, your session will not work on the API. If you are using Insomnia, click on the "Auth" tab and select "Bearer Token."</p>
+    <p>To authenticate with the API, you need to set the <code>Authorization</code> header to <code>Bearer &lt;API key&gt;</code>. If you are logged into Sunny Starbot through the website, your session will not work on the API, although this is not a recommended way to use the API. If you are using Insomnia, click on the "Auth" tab and select "Bearer Token."</p>
 
     <h3>Output data</h3>
     <pre>
@@ -93,7 +92,7 @@ output: any|null
             <tr>
                 <td>403</td>
                 <td>Forbidden</td>
-                <td>While this endpoint is functional, you need additional permission to use it. Please <a href="https://equestria.dev" target="_blank">contact us</a> to resolve this.</td>
+                <td>You should normally have access to this endpoint, but your account has been blocked by the administrators.</td>
             </tr>
             <tr>
                 <td>404</td>
@@ -139,7 +138,7 @@ output: any|null
     </table>
 
     <h3>Endpoints</h3>
-    <p>All API endpoints take root in https://sunnystarbot.equestria.dev/api (<b>warning:</b> api.sunnystarbot.equestria.dev is not used anymore).</p>
+    <p>All API endpoints take root in https://sunnystarbot.equestria.dev/api.</p>
     <table class="table">
         <thead>
             <tr>
@@ -153,7 +152,7 @@ output: any|null
         <tbody>
             <tr>
                 <td><code>GET</code></td>
-                <td>/v1/status</td>
+                <td>v1/status</td>
                 <td>-</td>
                 <td>Get system information.</td>
                 <td><pre>{
@@ -169,8 +168,17 @@ output: any|null
 }</pre></td>
             </tr>
             <tr>
+                <td><code>GET</code><br><span class="badge bg-secondary">New</span></td>
+                <td>v1/available</td>
+                <td>-</td>
+                <td>Check if enqueing a new generation is possible.</td>
+                <td><pre>{
+    "available": boolean
+}</pre></td>
+            </tr>
+            <tr>
                 <td><code>GET</code></td>
-                <td>/v1/history</td>
+                <td>v1/history</td>
                 <td>URL: <code>amount</code>: number (optional)</td>
                 <td>Get previous generations associated with this account.</td>
                 <td><pre>[
@@ -188,7 +196,7 @@ output: any|null
             </tr>
             <tr>
                 <td><code>GET</code></td>
-                <td>/v1/history/<b>:id</b></td>
+                <td>v1/history/<b>:id</b></td>
                 <td>-</td>
                 <td>Get a specific generation from its ID.</td>
                 <td><pre>{
@@ -204,7 +212,7 @@ output: any|null
             </tr>
             <tr>
                 <td><code>DELETE</code></td>
-                <td>/v1/history/<b>:id</b></td>
+                <td>v1/history/<b>:id</b></td>
                 <td>-</td>
                 <td>Remove a specific generation from your history using its ID.</td>
                 <td><pre>{
@@ -220,9 +228,9 @@ output: any|null
             </tr>
             <tr>
                 <td><code>POST</code></td>
-                <td>/v1/generate</td>
+                <td>v1/generate</td>
                 <td>JSON: <code>input</code>: string</td>
-                <td>Enqueue a new generation job.<br><b>This endpoint requires special permissions.</b></td>
+                <td>Enqueue a new generation job.</td>
                 <td><pre>{
     "id": string
 }</pre></td>

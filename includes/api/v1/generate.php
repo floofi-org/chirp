@@ -17,7 +17,7 @@ endpoint(["POST"], false, [
         "required" => true,
         "post" => true
     ]
-], true);
+]);
 
 $possible = true;
 
@@ -55,6 +55,8 @@ if ($profile["id"] === json_decode(file_get_contents($_SERVER['DOCUMENT_ROOT'] .
 if ($code > 0) {
     file_put_contents($_SERVER['DOCUMENT_ROOT'] . "/includes/outputs/" . $fid . "/held.txt", $code);
 }
+
+file_put_contents($_SERVER['DOCUMENT_ROOT'] . "/includes/outputs/" . $fid . "/version.txt", trim(file_get_contents($_SERVER['DOCUMENT_ROOT'] . "/includes/version-plus.txt")));
 
 if ($code < 2) {
     file_put_contents($_SERVER['DOCUMENT_ROOT'] . "/includes/outputs/" . $fid . "/input_plus.txt", $modelText);

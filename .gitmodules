@@ -1,4 +1,0 @@
-
-[submodule "includes/recaptcha"]
-	path = includes/recaptcha
-	url = https://github.com/google/recaptcha

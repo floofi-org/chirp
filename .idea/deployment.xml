@@ -6,17 +6,10 @@
       <paths name="dabssi">
         <serverdata>
           <mappings>
-            <mapping deploy="/pool/web/sunnystarbot" local="$PROJECT_DIR$" web="/" />
-          </mappings>
-        </serverdata>
-      </paths>
-      <paths name="maretimebay">
-        <serverdata>
-          <mappings>
-            <mapping deploy="/pool/web/sunnystarbot" local="$PROJECT_DIR$" web="/" />
+            <mapping deploy="/pool/web/sunnystarbot/staging" local="$PROJECT_DIR$" web="/" />
           </mappings>
           <excludedPaths>
-            <excludedPath local="true" path="$PROJECT_DIR$/includes/runtime/venv" />
+            <excludedPath local="true" path="$PROJECT_DIR$/includes/runtime" />
           </excludedPaths>
         </serverdata>
       </paths>

@@ -13,11 +13,9 @@ if ($loggedIn) {
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Sunny Starbot</title>
-    <script src="/assets/recaptcha.js"></script>
     <link href="/assets/bootstrap.min.css" rel="stylesheet">
     <script src="/assets/bootstrap.min.js"></script>
     <style>
-        .grecaptcha-badge { visibility: hidden; }
         #mobile-separator { display: none; }
 
         @font-face {
@@ -178,11 +176,11 @@ if ($loggedIn) {
     </style>
     <link rel="shortcut icon" href="/assets/favicon.svg" type="image/svg+xml">
 </head>
-<body style="background-image: url('/assets/bg.png'); background-size: cover; background-position: center; background-attachment: fixed; background-color: #feaf91;">
+<body style="background-image: url('/assets/bg.webp'); background-size: cover; background-position: center; background-attachment: fixed; background-color: #feaf91;">
 <br><br>
 
 <main class="container" style="background-color: #9c1d96; color: white; border-radius: 30px; padding: 30px;">
-    <img src="/assets/banner.png" alt="Sunny Starbot" style="width: 100%; max-width: 768px; display: block; margin-left: auto; margin-right: auto; margin-bottom: 30px;">
+    <img src="/assets/banner.webp" alt="Sunny Starbot" style="width: 100%; max-width: 768px; display: block; margin-left: auto; margin-right: auto; margin-bottom: 30px;">
 
     <div style="display: grid; grid-template-columns: 1fr 1fr; grid-gap: 30px;" id="panes">
         <div id="pane-right" style="order: 2;">
@@ -190,9 +188,15 @@ if ($loggedIn) {
 
             <p>By logging in, you get unlimited and free access to Sunny Starbot, as long as you keep your content family-friendly and harmless.</p>
 
+            <?php if ($_SERVER['SERVER_PORT'] === "81"): ?>
+            <div class="alert alert-warning">
+                <b>This is a development environment for the Sunny Starbot website.</b> If you are looking to use Sunny Starbot, visit <a style="color: white;" href="https://sunnystarbot.equestria.dev">the main website</a> instead. You may not be allowed to log in to the development website without administrator approval.
+            </div>
+            <?php endif; ?>
+
             <a class="btn btn-primary" href="/auth/init">Log in with an Equestria.dev account</a>
 
-            <img src="/assets/sunny.png" style="max-width: 75%; margin-left: auto; display: block; margin-right: -30px;">
+            <img src="/assets/sunny.webp" style="max-width: 75%; margin-left: auto; display: block; margin-right: -30px;">
         </div>
 
         <div id="pane-left" style="order: 1;">
@@ -208,9 +212,8 @@ if ($loggedIn) {
     <hr>
 
     <div class="small text-muted">
-        Protected by reCAPTCHA (see Google's <a href="https://policies.google.com/terms" target="_blank">Terms of service</a> or <a href="https://policies.google.com/privacy" target="_blank">Privacy policy</a>)<br>
         Made with ❤ by ponies in Equestria. My Little Pony is ™ and © Hasbro, All rights reserved. Artwork is the property of Hasbro.<br>
-        © <?= date('Y') ?> <a href="https://equestria.dev" target="_blank">Equestria.dev Developers</a> · <a href="https://equestria.dev" target="_blank" data-bs-toggle="modal" data-bs-target="#terms">Terms of use</a> · Not created or endorsed by Hasbro.
+        © <?= date('Y') ?> <a href="https://equestria.dev" target="_blank">Equestria.dev Developers</a> · <a target="_blank" data-bs-toggle="modal" data-bs-target="#terms">Terms of use</a> · Not created or endorsed by Hasbro.
     </div>
 
     <br><br>

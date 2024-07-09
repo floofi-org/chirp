@@ -1,5 +1,9 @@
 <?php
 
+$strictSession = false;
+require_once $_SERVER['DOCUMENT_ROOT'] . "/includes/session.php";
+global $loggedIn; global $profile;
+
 function _crash($errno, $message, $file, $line) {
     file_put_contents("/tmp/error.txt", "[$errno] $message\n    at " . $file . ":" . $line . "\n");
     error(500);
@@ -17,8 +21,8 @@ $data = [
 ];
 header("Content-Type: application/json");
 
-function endpoint($methods = ["GET"], $needsId = false, $parameters = [], $permissive = false) {
-    global $parts;
+function endpoint($methods = ["GET"], $needsId = false, $parameters = []) {
+    global $parts; global $loggedIn;
 
     $keys = json_decode(file_get_contents($_SERVER['DOCUMENT_ROOT'] . "/includes/keys.json"), true);
 
@@ -40,7 +44,7 @@ function endpoint($methods = ["GET"], $needsId = false, $parameters = [], $permi
         } else {
             error(401);
         }
-    } else {
+    } elseif (!$loggedIn) {
         error(401);
     }
 
@@ -68,14 +72,6 @@ function endpoint($methods = ["GET"], $needsId = false, $parameters = [], $permi
                     error(413);
                 }
             }
-        }
-    }
-
-    if ($permissive) {
-        $lists = json_decode(file_get_contents($_SERVER['DOCUMENT_ROOT'] . "/includes/permitted.json"), true);
-
-        if (!in_array($user, $lists)) {
-            error(403);
         }
     }
 }
@@ -198,4 +194,8 @@ function error($code) {
                 "output" => null
             ]));
     }
+}
+
+if (in_array($profile["id"], json_decode(file_get_contents($_SERVER['DOCUMENT_ROOT'] . "/includes/tokens.json"), true)['oauth']['banned'])) {
+    error(403);
 }

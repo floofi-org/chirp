@@ -25,7 +25,7 @@ curl_setopt($crl, CURLOPT_HTTPHEADER, [
     "Content-Type: application/x-www-form-urlencoded",
     "Accept: application/json"
 ]);
-curl_setopt($crl, CURLOPT_POSTFIELDS, "grant_type=authorization_code&redirect_uri=" . urlencode("https://sunnystarbot.equestria.dev/auth/callback") . "&code=" . $_GET['code']);
+curl_setopt($crl, CURLOPT_POSTFIELDS, "grant_type=authorization_code&redirect_uri=" . urlencode("https://" . ($_SERVER['SERVER_PORT'] === "81" ? "sunnystarbot-staging" : "sunnystarbot") . ".equestria.dev/auth/callback") . "&code=" . $_GET['code']);
 
 $result = curl_exec($crl);
 $result = json_decode($result, true);
@@ -44,7 +44,7 @@ if (isset($result["access_token"])) {
     $result = $result_orig = curl_exec($crl);
     $result = json_decode($result, true);
 
-    if ($appdata["oauth"]["private"] && !in_array($result["id"], $appdata["oauth"]["allowed"])) {
+    if ($_SERVER['SERVER_PORT'] === "81" && !in_array($result["id"], $appdata["oauth"]["allowed"])) {
         header("Location: /denied/?user=" . rawurlencode(base64_encode($result["login"] . " (" . $result["profile"]["email"]["email"] . ")")));
         die();
     }
