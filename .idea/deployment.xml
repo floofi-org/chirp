@@ -3,14 +3,43 @@
   <component name="PublishConfigData" autoUpload="Always" serverName="dabssi" confirmBeforeDeletion="false" autoUploadExternalChanges="true">
     <option name="confirmBeforeDeletion" value="false" />
     <serverData>
+      <paths name="BridleOS">
+        <serverdata>
+          <mappings>
+            <mapping local="$PROJECT_DIR$" web="/" />
+          </mappings>
+        </serverdata>
+      </paths>
       <paths name="dabssi">
         <serverdata>
           <mappings>
             <mapping deploy="/pool/web/sunnystarbot/staging" local="$PROJECT_DIR$" web="/" />
           </mappings>
           <excludedPaths>
-            <excludedPath local="true" path="$PROJECT_DIR$/includes/runtime" />
+            <excludedPath local="true" path="$USER_HOME$/Projects/slyfox/includes/runtime" />
+            <excludedPath local="true" path="$USER_HOME$/Projects/slyfox/client" />
           </excludedPaths>
+        </serverdata>
+      </paths>
+      <paths name="hudgens">
+        <serverdata>
+          <mappings>
+            <mapping local="$PROJECT_DIR$" web="/" />
+          </mappings>
+        </serverdata>
+      </paths>
+      <paths name="watson">
+        <serverdata>
+          <mappings>
+            <mapping local="$PROJECT_DIR$" web="/" />
+          </mappings>
+        </serverdata>
+      </paths>
+      <paths name="watson-legacy">
+        <serverdata>
+          <mappings>
+            <mapping local="$PROJECT_DIR$" web="/" />
+          </mappings>
         </serverdata>
       </paths>
     </serverData>

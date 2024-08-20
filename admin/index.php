@@ -30,10 +30,10 @@ function getUserData($id) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Moderation center | Sunny Starbot</title>
-    <link href="/assets/bootstrap.min.css" rel="stylesheet">
-    <script src="/assets/bootstrap.min.js"></script>
-    <link rel="shortcut icon" href="/assets/favicon.svg" type="image/svg+xml">
+    <title>Moderation center | Floofi Voice Generator</title>
+    <link href="/assets/bootstrap/bootstrap.min.css" rel="stylesheet">
+    <script src="/assets/bootstrap/bootstrap.min.js"></script>
+    <link rel="shortcut icon" href="https://voice.floo.fi/assets/favicon.png" type="image/svg+xml">
 </head>
 <body>
 <div class="container">

@@ -1,4 +1,4 @@
 <?php
 
-header("Location: https://sunnystarbot.equestria.dev/docs");
+header("Location: /docs");
 die();

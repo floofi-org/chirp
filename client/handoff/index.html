@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Floofi Voice Generator</title>
+    <link rel="stylesheet" href="https://fella.floo.fi/0.2.10/fella.min.css" integrity="sha384-CRs8LPGM/PAE0mx8i1lsMeP1GcgUT3YEA2SM4xDS1TFk5ep6L/laA7DNiAYlN785" crossorigin="anonymous">
+    <link rel="shortcut icon" href="/assets/favicon.png" type="image/svg+xml">
+</head>
+<body>
+<br><br>
+
+<main class="container">
+    <div id="loader" class="fella-loader-container">
+        <svg id="sp-loader-svg" class="fella-loader" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid" style="shape-rendering: auto; display: block; background: transparent;">
+            <g><g transform="rotate(0 50 50)">
+                <rect fill="#8f8f8f" height="16" width="5" ry="2.56" rx="2.5" y="22" x="47.5">
+                    <animate repeatCount="indefinite" begin="-0.9166666666666666s" dur="1s" keyTimes="0;1" values="1;0" attributeName="opacity"></animate>
+                </rect>
+            </g><g transform="rotate(30 50 50)">
+                <rect fill="#8f8f8f" height="16" width="5" ry="2.56" rx="2.5" y="22" x="47.5">
+                    <animate repeatCount="indefinite" begin="-0.8333333333333334s" dur="1s" keyTimes="0;1" values="1;0" attributeName="opacity"></animate>
+                </rect>
+            </g><g transform="rotate(60 50 50)">
+                <rect fill="#8f8f8f" height="16" width="5" ry="2.56" rx="2.5" y="22" x="47.5">
+                    <animate repeatCount="indefinite" begin="-0.75s" dur="1s" keyTimes="0;1" values="1;0" attributeName="opacity"></animate>
+                </rect>
+            </g><g transform="rotate(90 50 50)">
+                <rect fill="#8f8f8f" height="16" width="5" ry="2.56" rx="2.5" y="22" x="47.5">
+                    <animate repeatCount="indefinite" begin="-0.6666666666666666s" dur="1s" keyTimes="0;1" values="1;0" attributeName="opacity"></animate>
+                </rect>
+            </g><g transform="rotate(120 50 50)">
+                <rect fill="#8f8f8f" height="16" width="5" ry="2.56" rx="2.5" y="22" x="47.5">
+                    <animate repeatCount="indefinite" begin="-0.5833333333333334s" dur="1s" keyTimes="0;1" values="1;0" attributeName="opacity"></animate>
+                </rect>
+            </g><g transform="rotate(150 50 50)">
+                <rect fill="#8f8f8f" height="16" width="5" ry="2.56" rx="2.5" y="22" x="47.5">
+                    <animate repeatCount="indefinite" begin="-0.5s" dur="1s" keyTimes="0;1" values="1;0" attributeName="opacity"></animate>
+                </rect>
+            </g><g transform="rotate(180 50 50)">
+                <rect fill="#8f8f8f" height="16" width="5" ry="2.56" rx="2.5" y="22" x="47.5">
+                    <animate repeatCount="indefinite" begin="-0.4166666666666667s" dur="1s" keyTimes="0;1" values="1;0" attributeName="opacity"></animate>
+                </rect>
+            </g><g transform="rotate(210 50 50)">
+                <rect fill="#8f8f8f" height="16" width="5" ry="2.56" rx="2.5" y="22" x="47.5">
+                    <animate repeatCount="indefinite" begin="-0.3333333333333333s" dur="1s" keyTimes="0;1" values="1;0" attributeName="opacity"></animate>
+                </rect>
+            </g><g transform="rotate(240 50 50)">
+                <rect fill="#8f8f8f" height="16" width="5" ry="2.56" rx="2.5" y="22" x="47.5">
+                    <animate repeatCount="indefinite" begin="-0.25s" dur="1s" keyTimes="0;1" values="1;0" attributeName="opacity"></animate>
+                </rect>
+            </g><g transform="rotate(270 50 50)">
+                <rect fill="#8f8f8f" height="16" width="5" ry="2.56" rx="2.5" y="22" x="47.5">
+                    <animate repeatCount="indefinite" begin="-0.16666666666666666s" dur="1s" keyTimes="0;1" values="1;0" attributeName="opacity"></animate>
+                </rect>
+            </g><g transform="rotate(300 50 50)">
+                <rect fill="#8f8f8f" height="16" width="5" ry="2.56" rx="2.5" y="22" x="47.5">
+                    <animate repeatCount="indefinite" begin="-0.08333333333333333s" dur="1s" keyTimes="0;1" values="1;0" attributeName="opacity"></animate>
+                </rect>
+            </g><g transform="rotate(330 50 50)">
+                <rect fill="#8f8f8f" height="16" width="5" ry="2.56" rx="2.5" y="22" x="47.5">
+                    <animate repeatCount="indefinite" begin="0s" dur="1s" keyTimes="0;1" values="1;0" attributeName="opacity"></animate>
+                </rect>
+            </g><g></g></g>
+        </svg>
+    </div>
+
+    <script>
+        (async () => {
+            window.handoffToken = location.hash.substring(1);
+
+            let handoff = await (await fetch("https://voice-api.floo.fi/api/v2/handoff", {
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    token: window.handoffToken
+                })
+            })).json();
+
+            if (handoff.error) {
+                location.href = "/";
+            } else {
+                localStorage.setItem("token", handoff.output.token);
+                location.href = "/app";
+            }
+        })();
+    </script>
+</main>
+
+</body>
+</html>

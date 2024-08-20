@@ -1,0 +1,557 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Floofi Voice Generator</title>
+    <link href="/assets/bootstrap/bootstrap.min.css" rel="stylesheet">
+    <script src="/assets/bootstrap/bootstrap.min.js"></script>
+    <link rel="shortcut icon" href="/assets/favicon.png" type="image/svg+xml">
+
+    <style>
+        @media (max-width: 900px) {
+            #panes {
+                grid-template-columns: 1fr !important;
+            }
+
+            header {
+                grid-template-columns: 1fr max-content !important;
+            }
+
+            #header-right {
+                display: none !important;
+            }
+
+            #panes > div {
+                order: 0 !important;
+            }
+
+            main.container {
+                margin-top: 12px !important;
+            }
+
+            #preview {
+                max-width: 128px !important;
+            }
+
+            textarea {
+                height: 10vh !important;
+            }
+
+            .history-item {
+                grid-template-columns: 1fr !important;
+                height: max-content !important;
+            }
+
+            .history-spectrogram {
+                display: none !important;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div id="loader" style="margin-top: 20px;" class="container">
+    Please wait...
+</div>
+
+<div id="app" style="display: none; min-height: 100vh;" class="bg-light">
+    <main class="container pt-5">
+        <div class="card">
+            <div class="card-body">
+                <header style="display: grid; grid-template-columns: 1fr 1fr 1fr; grid-gap: 20px;">
+                    <label style="display: flex; align-items: center; gap: 10px; max-width: 384px;">
+                        <span>Character:</span>
+                        <select onchange="refreshModel();" id="model" class="form-select"></select>
+                    </label>
+                    <div style="display: flex; align-items: center; justify-content: center;" id="header-middle">
+                        FVG (temporary)
+                    </div>
+                    <div style="display: flex; align-items: center; justify-content: right;" id="header-right">
+                        by Equestria.dev
+                    </div>
+                </header>
+
+                <div>
+                    <div>
+                        <form id="panes" onsubmit="sendRequest(); return false;" style="margin-top: 30px; display: grid; grid-template-columns: 1fr 2fr 1fr; grid-gap: 20px;">
+                            <div style="order: 1;">
+                                <div id="model-details"></div>
+
+                                <div id="preview" style="background-size: contain; background-position: center; margin-left: auto; margin-right: auto; background-repeat: no-repeat; width: 100%; max-width: 256px; aspect-ratio: 1;"></div>
+
+                                <script>
+                                    function refreshModel() {
+                                        let id = document.getElementById("model").value;
+                                        Array.from(document.getElementsByClassName("model")).map(i => i.style.display = "none");
+                                        document.getElementById("model-" + id).style.display = "";
+                                        document.getElementById("preview").style.backgroundImage = 'url("/assets/models/' + id + '.webp")';
+                                    }
+                                </script>
+                            </div>
+
+                            <div style="order: 2;">
+                                <div style="display: grid; grid-template-columns: 1fr max-content; grid-gap: 10px;">
+                                    <div style="align-items: center; display: flex; justify-content: center;" class="text-muted">
+                                        <div>
+                                            <p>Your input will be read by real creatures, never enter personal or confidential information.</p>
+                                        </div>
+                                    </div>
+                                    <div>
+
+                                    </div>
+                                </div>
+
+                                <div class="alert alert-danger mt-2">
+                                    <ol style="margin: 0;">
+                                        <li>Credit "Floofi Voice Generator"</li>
+                                        <li>Don't mix with other TTS</li>
+                                        <li>Keep it family-friendly</li>
+                                    </ol>
+                                </div>
+                            </div>
+
+                            <div style="order: 1;">
+                                <textarea class="form-control" rows="7" style="resize: none;" id="input" autofocus placeholder="Enter text here." maxlength=160" disabled></textarea>
+                                <button class="btn btn-primary mt-4" style="display: block; margin-left: auto; margin-right: auto; width: max-content;" id="submit-btn" disabled>Generate</button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <hr>
+
+                    <div>
+                        <div id="list" class="list-group"></div>
+
+                        <div id="list-message" style="font-style: italic;">Loading previous generations...</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <div class="container" id="bottom">
+        <hr>
+
+        <div class="small text-muted">
+            Made with ❤ by Equestria.dev. All brands and intellectual properties belong to their respective owners, all rights reserved.<br>
+            © <span id="footer-year"></span> <a href="https://equestria.dev" target="_blank">Equestria.dev Developers</a> • <a target="_blank" data-bs-toggle="modal" data-bs-target="#terms" href="#">Terms of use</a> • <a target="_blank" href="https://voice-api.floo.fi/docs/">API docs</a> • Version <span id="footer-version"></span>
+        </div>
+
+        <br><br>
+    </div>
+</div>
+
+<script>
+    (async () => {
+        let code = (await (await fetch("https://voice-api.floo.fi/api/v2/status", {
+            credentials: "include",
+            headers: {
+                "Authorization": localStorage.getItem('token') ? "PrivateToken " + localStorage.getItem('token') : ''
+            }
+        })).json()).error?.code;
+
+        if (code === 401) {
+            location.href = "/";
+            return;
+        } else if (code === 403) {
+            location.href = "/banned";
+            return;
+        }
+
+        window._fetch = fetch;
+        window.fetch = async (input, init) => {
+            if (!init) init = {};
+            init["credentials"] = "include";
+            if (!init["headers"]) init["headers"] = {};
+            init["headers"]["Authorization"] = localStorage.getItem('token') ? "PrivateToken " + localStorage.getItem('token') : '';
+
+            return await _fetch(input, init);
+        }
+
+        window.models = (await (await fetch("https://voice-api.floo.fi/api/v2/models")).json()).output;
+        window.processing = false;
+
+        document.getElementById("model").innerHTML = window.models.map(i => `
+            <option value="${i.id}">${i.name}</option>
+        `).join("");
+        document.getElementById("model-details").innerHTML = window.models.map(i => `
+            <div id="model-${i.id}" class="model text-muted small" style="text-align: center; display: none;">v${i.version} • ${i.source}</div>
+        `).join("");
+
+        refreshModel();
+
+        window.modelIdToName = (id) => {
+            return window.models.find(i => i.id === id)?.name ?? "(unknown)";
+        }
+
+        window.checkPossible = () => {
+            let possible = window.possibleData;
+
+            if (!processing && possible && document.getElementById("submit-btn").disabled) {
+                document.getElementById("submit-btn").disabled = false;
+                document.getElementById("input").disabled = false;
+                if (!modal || !modal._isShown) document.getElementById("input").focus();
+            } else if ((!possible || processing) && !document.getElementById("submit-btn").disabled) {
+                document.getElementById("submit-btn").disabled = true;
+                document.getElementById("input").disabled = true;
+            }
+        }
+
+        document.getElementById("input").onkeydown = (event) => {
+            if (event.code === "Enter" && (event.metaKey || event.ctrlKey)) {
+                sendRequest();
+            }
+        }
+
+        window.sendRequest = () => {
+            if (document.getElementById("input").value.trim() !== "") {
+                window.processing = true;
+                document.getElementById("submit-btn").disabled = true;
+                document.getElementById("input").disabled = true;
+
+                fetch("https://voice-api.floo.fi/api/v2/generate", {
+                    method: "POST",
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        input: document.getElementById("input").value,
+                        model: document.getElementById("model").value
+                    })
+                }).then((res) => {
+                    res.json().then((data) => {
+                        window.processing = false;
+
+                        if (!data['error']) {
+                            document.getElementById("input").value = "";
+
+                            fetch("https://voice-api.floo.fi/api/v2/history?amount=30").then((res) => {
+                                res.json().then((data) => {
+                                    window.listData = data['output']['history'];
+                                    refreshList();
+                                });
+                            });
+
+                            fetch("https://voice-api.floo.fi/api/v2/available").then((res) => {
+                                res.json().then((data) => {
+                                    window.possibleData = data['output']['available'];
+                                    checkPossible();
+                                });
+                            });
+                        } else {
+                            document.getElementById("submit-btn").disabled = false;
+                            document.getElementById("input").disabled = false;
+                            modal.show();
+                        }
+                    });
+                });
+            }
+        }
+
+        window.timeAgo = (time) => {
+            if (!isNaN(parseInt(time))) {
+                time = new Date(time).getTime();
+            }
+
+            let periods = ["second", "minute", "hour", "day", "week", "month", "year", "age"];
+
+            let lengths = ["60", "60", "24", "7", "4.35", "12", "100"];
+
+            let now = new Date().getTime();
+
+            let difference = Math.round((now - time) / 1000);
+            let tense;
+            let period;
+
+            if (difference <= 60 && difference >= 0) {
+                return "now";
+            } else if (difference > 0) {
+                tense = "ago";
+            } else {
+                tense = "later";
+            }
+
+            let j;
+
+            for (j = 0; difference >= lengths[j] && j < lengths.length - 1; j++) {
+                difference /= lengths[j];
+            }
+
+            difference = Math.round(difference);
+
+            period = periods[j];
+
+            return `${difference} ${period}${difference > 1 ? "s" : ""} ${tense}`;
+        }
+
+        window.playerAction = (id) => {
+            let audio = document.getElementById("history-player-" + id);
+            let btn = document.getElementById("history-player-" + id + "-action");
+            let btnPlay = document.getElementById("history-player-" + id + "-play");
+            let btnStop = document.getElementById("history-player-" + id + "-stop");
+
+            if (audio.paused) {
+                audio.currentTime = 0;
+                audio.muted = false;
+                audio.volume = 1;
+                audio.play();
+
+                btn.title = "Stop";
+                btnPlay.style.display = "none";
+                btnStop.style.display = "inline-block";
+            } else {
+                audio.currentTime = 0;
+                audio.muted = false;
+                audio.volume = 1;
+                audio.pause();
+
+                btn.title = "Play";
+                btnPlay.style.display = "inline-block";
+                btnStop.style.display = "none";
+            }
+        }
+
+        window.deleted = [];
+
+        window.playerDelete = (id) => {
+            document.getElementById("history-" + id).outerHTML = "";
+
+            fetch("https://voice-api.floo.fi/api/v2/history/" + id, {
+                method: "DELETE"
+            }).then(() => {
+                fetch("https://voice-api.floo.fi/api/v2/history?amount=30").then((res) => {
+                    res.json().then((data) => {
+                        window.listData = data['output']['history'];
+                        window.lastList = data['output']['history'];
+                        refreshList();
+                    });
+                });
+            });
+        }
+
+        window.playerDownload = (id, name) => {
+            let element = document.createElement("a");
+            element.setAttribute("download", name);
+            element.setAttribute("href", "https://cdn.equestria.dev/sunnystarbot/content/" + id + "/audio.wav");
+            element.click();
+        }
+
+        window.refreshList = () => {
+            let data = window.listData.filter(i => {
+                return i.status !== "removed";
+            }).reverse();
+
+            if (data.length > 0) {
+                document.getElementById("list-message").style.display = "none";
+                document.getElementById("list").style.display = "";
+
+                for (let id of Array.from(document.getElementById("list").children).map(i => i.id.split("-")[1])) {
+                    if (!data.map(i => i.id).includes(id)) {
+                        document.getElementById("history-" + id).outerHTML = "";
+                    }
+                }
+
+                for (let item of data) {
+                    if (!document.getElementById("history-" + item.id)) {
+                        document.getElementById("list").insertAdjacentHTML("afterbegin", `
+                            <div id="history-${item.id}" class="list-group-item history-item" style="display: grid; grid-template-columns: 2.5fr 1fr; grid-gap: 30px; height: 132px;">
+                                <div style="display: flex; align-items: center; width: 100%;">
+                                    <div style="width: 100%;">
+                                        <div style="margin-bottom: 10px;">
+                                            <div class="history-prompt" style="white-space: nowrap;overflow: hidden !important;text-overflow: ellipsis;" title="${item.input.replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;")}"><b>${item.input.replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;")}</b></div>
+                                            <div class="history-time text-muted small">${timeAgo(item.time)} · ${modelIdToName(item.model)} (v${item.version})</div>
+                                        </div>
+                                        <div class="history-player" style="display: none; height: 32px;">
+                                            <audio id="history-player-${item.id}"></audio>
+                                            <div style="height: 32px; display: grid; grid-template-columns: 32px 1fr 32px 32px; padding: 0 10px;">
+                                                <a title="Play" id="history-player-${item.id}-action" class="history-player-action" style="display: inline-block; height: 32px; width: 32px; padding: 4px; cursor: pointer; margin-top: -4px;" onclick="playerAction('${item.id}');">
+                                                    <img src="/assets/play.svg" style="display: inline-block; height: 32px; width: 32px; padding: 4px; border-radius: 999px;" alt="Play" id="history-player-${item.id}-play">
+                                                    <img src="/assets/stop.svg" style="display: none; height: 32px; width: 32px; padding: 4px; border-radius: 999px;" alt="Stop" id="history-player-${item.id}-stop">
+                                                </a>
+                                                <div style="display: flex; align-items: center; margin: 0 10px;">
+                                                    <div style="width: 100%; background-color: rgba(0, 0, 0, .1); height: 8px; border-radius: 999px;">
+                                                        <div id="history-player-${item.id}-bar" style="height: 8px; border-radius: 999px; width: 0; background-color: rgba(0, 0, 0, .25);"></div>
+                                                    </div>
+                                                </div>
+                                                <a title="Download" class="history-player-action" style="display: inline-block; height: 32px; width: 32px; padding: 4px; cursor: pointer; margin-top: -4px;" onclick="playerDownload('${item.id}', '${item.filename}');">
+                                                    <img src="/assets/download.svg" style="display: inline-block; height: 32px; width: 32px; padding: 4px; border-radius: 999px;" alt="Download">
+                                                </a>
+                                                <a title="Remove from history" class="history-player-action" style="display: inline-block; height: 32px; width: 32px; padding: 4px; cursor: pointer; margin-top: -4px;" onclick="playerDelete('${item.id}', '${item.filename}');">
+                                                    <img src="/assets/delete.svg" style="display: inline-block; height: 32px; width: 32px; padding: 4px; border-radius: 999px;" alt="Remove from history">
+                                                </a>
+                                            </div>
+                                        </div>
+                                        <div class="history-loading" style="display: none; height: 32px;">
+                                            <img src="/assets/loader.svg" style="height: 32px;width: 32px;" alt="" class="load-icon">
+                                            <span class="history-loading-text" style="margin-left: 10px;vertical-align: middle;">...</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div style="display: none; height: 114px;" class="history-spectrogram">
+                                    <img alt="Spectogram" class="history-spectrogram-img" style="width: 100%;">
+                                </div>
+                            </div>
+                        `);
+
+                        window.playIntervals = {};
+
+                        let id = item.id;
+                        let audio = document.getElementById("history-player-" + id);
+                        let btn = document.getElementById("history-player-" + id + "-action");
+                        let btnPlay = document.getElementById("history-player-" + id + "-play");
+                        let btnStop = document.getElementById("history-player-" + id + "-stop");
+                        let bar = document.getElementById("history-player-" + id + "-bar");
+
+                        document.getElementById("history-player-" + id).ondurationchange = () => {
+                            bar.style.width = "0%";
+                        }
+
+                        document.getElementById("history-player-" + id).onplay = () => {
+                            window.playIntervals[id] = setInterval(() => {
+                                bar.style.width = ((audio.currentTime / audio.duration) * 100) + "%";
+                            });
+                        }
+
+                        document.getElementById("history-player-" + id).onended = () => {
+                            clearInterval(window.playIntervals[id]);
+
+                            bar.style.width = "0%";
+                            audio.currentTime = 0;
+                            audio.muted = false;
+                            audio.volume = 1;
+
+                            btn.title = "Play";
+                            btnPlay.style.display = "inline-block";
+                            btnStop.style.display = "none";
+                        }
+                    }
+
+                    if (item.explicit) {
+                        if (document.querySelector("#history-" + item.id + " .history-prompt")) document.querySelector("#history-" + item.id + " .history-prompt").classList.add("explicit");
+                    } else {
+                        if (document.querySelector("#history-" + item.id + " .history-prompt")) document.querySelector("#history-" + item.id + " .history-prompt").classList.remove("explicit");
+                    }
+
+                    if (item.status === "processed") {
+                        document.querySelector("#history-" + item.id + " .history-player").style.display = "";
+                        document.querySelector("#history-" + item.id + " .history-spectrogram").style.display = "";
+                        document.querySelector("#history-" + item.id + " .history-spectrogram-img").src = "https://cdn.equestria.dev/sunnystarbot/content/" + item.id + "/figure.png";
+                        if (document.querySelector("#history-" + item.id + " .history-loading")) document.querySelector("#history-" + item.id + " .history-loading").style.display = "none";
+
+                        if (document.querySelector("#history-" + item.id + " .history-player audio").src.trim() === "") {
+                            document.querySelector("#history-" + item.id + " .history-player audio").src = "https://cdn.equestria.dev/sunnystarbot/content/" + item.id + "/audio.wav";
+                        }
+                    } else {
+                        document.querySelector("#history-" + item.id + " .history-player").style.display = "none";
+                        document.querySelector("#history-" + item.id + " .history-spectrogram").style.display = "none";
+                        if (document.querySelector("#history-" + item.id + " .history-loading")) {
+                            document.querySelector("#history-" + item.id + " .history-loading").style.display = "";
+
+                            if (item.status === "crashed") {
+                                document.querySelector("#history-" + item.id + " .history-loading .history-loading-text").innerText = "Failed to generate.";
+                            } else if (item.status === "queued") {
+                                document.querySelector("#history-" + item.id + " .history-loading .history-loading-text").innerText = "Waiting for an available server...";
+                            } else {
+                                document.querySelector("#history-" + item.id + " .history-loading .history-loading-text").innerText = "Generating...";
+                            }
+                        }
+                    }
+
+                    document.querySelector("#history-" + item.id + " .history-time").innerText = timeAgo(item.time) + " · " + modelIdToName(item.model) + " (v" + item.version + ")";
+                }
+            } else {
+                document.getElementById("list").style.display = "none";
+                document.getElementById("list-message").style.display = "";
+
+                document.getElementById("list-message").innerText = "You have not generated anything yet!";
+            }
+        }
+
+        document.getElementById("footer-year").innerText = new Date().getUTCFullYear();
+        document.getElementById("footer-version").innerText = (await (await fetch("/version")).text()).trim();
+
+        window.modal = new bootstrap.Modal(document.getElementById("cf"));
+        window.lastList = null;
+        window.lastPossible = null;
+
+        window.configureRefresh = () => {
+            function refresh() {
+                fetch("https://voice-api.floo.fi/api/v2/history?amount=30").then((res) => {
+                    res.json().then((data) => {
+                        window.listData = data['output']['history'];
+                        refreshList();
+                    });
+                });
+
+                fetch("https://voice-api.floo.fi/api/v2/available").then((res) => {
+                    res.json().then((data) => {
+                        window.possibleData = data['output']['available'];
+                        checkPossible();
+                    });
+                });
+            }
+
+            refresh();
+            setInterval(refresh, 5000);
+        }
+
+        configureRefresh();
+
+        document.getElementById("loader").style.display = "none";
+        document.getElementById("app").style.display = "";
+    })();
+</script>
+
+<div class="modal fade" id="terms">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Terms of use</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <div class="modal-body">
+                <b>In short:</b>
+                <ul>
+                    <li>Follow the <a href="https://equestria.dev/legal/terms/" target="_blank">Equestria.dev Terms of Service</a></li>
+                    <li>Credit "Floofi Voice Generator" and don't mix it with other text-to-speech engines</li>
+                    <li>All content is kept and viewed by the administrators</li>
+                    <li>Content must be family-friendly</li>
+                    <li>No religion or politics</li>
+                    <li>No impersonation or claiming to be Hasbro</li>
+                    <li>No bots or excessive use</li>
+                </ul>
+
+                <hr>
+                <p>These terms of use govern your use of the Voice Generator project and any access to the Voice Generator AI models you might have access to. It is considered that you have read and agreed to the following as soon as you start using Voice Generator. These terms of use complement the <a href="https://equestria.dev/legal/terms/" target="_blank">Equestria.dev Online Services Terms of Service</a> for the case of Skyfox only.</p>
+                <p>Users are granted exclusive limited access to Voice Generator that may be revoked at any time at the administrators' sole discretion, regardless of a breach in the following terms of use or not. To ensure respect of these terms, Equestria.dev will store and manually review all requests made to the service, including blocked requests, and even if they have been removed from your history.</p>
+                <p>Content generated through the use of Voice Generator must remain family-friendly and not cause harm to anyone, and, in case such content is shared, must credit "" or "Equestria.dev" and not be mixed with other text-to-speech engines to avoid confusion. This means violent, explicit, vulgar, religious, political, or other harmful content is not allowed. Impersonation, or claiming to be an official Hasbro content or entity, is not allowed.</p>
+                <div>Voice Generator runs on limited resources, therefore, users must use the service in a fair and non-abusive way. With that said, any use of automated software (or "bots") to generate content automatically is not allowed. Voice Generator makes use of rate limits to accomplish automatic blocking of bots. Users who make an excessive number of requests, even without using automated software, may also be acted upon.</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="cf">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Unable to process request</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <div class="modal-body">
+                <div class="alert alert-danger">
+                    <p><b>Your request contains inappropriate content.</b></p>
+                    <p>Voice Generator aims at providing results that are appropriate for all ages. Any potential content that exceeds a kid-friendly rating is not allowed. For more information, please read the terms of use.</p>
+                    You may now modify your request to remove the corresponding content.
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

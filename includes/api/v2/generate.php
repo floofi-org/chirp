@@ -16,6 +16,11 @@ endpoint(["POST"], false, [
         "length" => 160,
         "required" => true,
         "post" => true
+    ],
+    "model" => [
+        "length" => 32,
+        "required" => true,
+        "post" => true
     ]
 ]);
 
@@ -31,6 +36,9 @@ foreach (array_filter(scandir($_SERVER['DOCUMENT_ROOT'] . "/includes/outputs"), 
 
 if (!$possible || !getPossible()) error(429);
 
+$models = json_decode(file_get_contents($_SERVER['DOCUMENT_ROOT'] . "/includes/models.json"), true);
+if (!isset($models[$_POST["model"]]) || !$models[$_POST["model"]]["enabled"]) error(501);
+
 $code = getFilterCode($_POST["input"]);
 
 // ---------------------------
@@ -44,7 +52,7 @@ while (file_exists($_SERVER['DOCUMENT_ROOT'] . "/includes/outputs/" . $fid)) {
 }
 
 mkdir($_SERVER['DOCUMENT_ROOT'] . "/includes/outputs/" . $fid);
-file_put_contents($_SERVER['DOCUMENT_ROOT'] . "/includes/outputs/" . $fid . "/model.txt", "sunny");
+file_put_contents($_SERVER['DOCUMENT_ROOT'] . "/includes/outputs/" . $fid . "/model.txt", $_POST["model"]);
 file_put_contents($_SERVER['DOCUMENT_ROOT'] . "/includes/outputs/" . $fid . "/author.txt", $profile["id"]);
 file_put_contents($_SERVER['DOCUMENT_ROOT'] . "/includes/outputs/" . $fid . "/timestamp.txt", time());
 file_put_contents($_SERVER['DOCUMENT_ROOT'] . "/includes/outputs/" . $fid . "/input_orig.txt", substr(trim($_POST["input"] ?? ""), 0, 160));
@@ -57,10 +65,10 @@ if ($code > 0) {
     file_put_contents($_SERVER['DOCUMENT_ROOT'] . "/includes/outputs/" . $fid . "/held.txt", $code);
 }
 
-file_put_contents($_SERVER['DOCUMENT_ROOT'] . "/includes/outputs/" . $fid . "/version.txt", json_decode(file_get_contents($_SERVER['DOCUMENT_ROOT'] . "/includes/models.json"), true)["sunny"]["version"]);
+file_put_contents($_SERVER['DOCUMENT_ROOT'] . "/includes/outputs/" . $fid . "/version.txt", $models[$_POST["model"]]["version"]);
 
 if ($code < 2) {
-    file_put_contents($_SERVER['DOCUMENT_ROOT'] . "/includes/outputs/" . $fid . "/inputtxt", $modelText);
+    file_put_contents($_SERVER['DOCUMENT_ROOT'] . "/includes/outputs/" . $fid . "/input.txt", $modelText);
 } else {
     file_put_contents($_SERVER['DOCUMENT_ROOT'] . "/includes/outputs/" . $fid . "/blocked.txt", "");
 }

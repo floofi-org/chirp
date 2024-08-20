@@ -19,7 +19,8 @@ pronounciation_dictionary = False
 show_graphs = True
 max_duration =  20
 stop_threshold = 0.5
-superres_strength = 5
+superres_strength = 0
+denoising_strength = 2000
 
 import matplotlib
 import json
@@ -129,7 +130,7 @@ def end_to_end_infer(text, pronounciation_dictionary, show_graphs, id):
             y_g_hat = hifigan(mel_outputs_postnet.float())
             audio = y_g_hat.squeeze()
             audio = audio * MAX_WAV_VALUE
-            audio_denoised = denoiser(audio.view(1, -1), strength=35)[:, 0]
+            audio_denoised = denoiser(audio.view(1, -1), strength=denoising_strength)[:, 0]
 
             # Resample to 32k
             audio_denoised = audio_denoised.cpu().numpy().reshape(-1)
@@ -162,7 +163,7 @@ def end_to_end_infer(text, pronounciation_dictionary, show_graphs, id):
             y_g_hat2 = hifigan_sr(new_mel)
             audio2 = y_g_hat2.squeeze()
             audio2 = audio2 * MAX_WAV_VALUE
-            audio2_denoised = denoiser(audio2.view(1, -1), strength=35)[:, 0]
+            audio2_denoised = denoiser(audio2.view(1, -1), strength=denoising_strength)[:, 0]
 
             # High-pass filter, mixing and denormalizing
             audio2_denoised = audio2_denoised.cpu().numpy().reshape(-1)
@@ -248,6 +249,6 @@ if previous_tt2_id != TACOTRON2_ID:
 model.decoder.max_decoder_steps = max_duration * 80
 model.decoder.gate_threshold = stop_threshold
 
-print(f"Current Config:\npronounciation_dictionary: {pronounciation_dictionary}\nshow_graphs: {show_graphs}\nmax_duration (in seconds): {max_duration}\nstop_threshold: {stop_threshold}\nsuperres_strength: {superres_strength}\n\n")
+print(f"Current Config:\npronounciation_dictionary: {pronounciation_dictionary}\nshow_graphs: {show_graphs}\nmax_duration (in seconds): {max_duration}\nstop_threshold: {stop_threshold}\nsuperres_strength: {superres_strength}\ndenoising_strength: {denoising_strength}\n\n")
 
 print("Ready")

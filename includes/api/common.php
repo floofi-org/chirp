@@ -6,7 +6,7 @@ global $loggedIn; global $profile;
 
 function _crash($errno, $message, $file, $line) {
     file_put_contents("/tmp/error.txt", "[$errno] $message\n    at " . $file . ":" . $line . "\n");
-    error(500);
+    error(500, "[$errno] $message\n    at " . $file . ":" . $line . "\n");
 }
 
 set_error_handler("_crash", E_ALL);
@@ -21,31 +21,33 @@ $data = [
 ];
 header("Content-Type: application/json");
 
-function endpoint($methods = ["GET"], $needsId = false, $parameters = []) {
+function endpoint($methods = ["GET"], $needsId = false, $parameters = [], $needsAuthentication = true) {
     global $parts; global $loggedIn;
 
-    $keys = json_decode(file_get_contents($_SERVER['DOCUMENT_ROOT'] . "/includes/keys.json"), true);
+    if ($needsAuthentication) {
+        $keys = json_decode(file_get_contents($_SERVER['DOCUMENT_ROOT'] . "/includes/keys.json"), true);
 
-    if (isset($_SERVER['HTTP_AUTHORIZATION'])) {
-        if (str_starts_with($_SERVER['HTTP_AUTHORIZATION'], "Bearer ")) {
-            $token = substr($_SERVER['HTTP_AUTHORIZATION'], 7);
+        if (isset($_SERVER['HTTP_AUTHORIZATION'])) {
+            if (str_starts_with($_SERVER['HTTP_AUTHORIZATION'], "Bearer ")) {
+                $token = substr($_SERVER['HTTP_AUTHORIZATION'], 7);
 
-            if (in_array($token, array_values($keys))) {
-                global $user;
-                $user = array_keys($keys)[array_search($token, array_values($keys))];
+                if (in_array($token, array_values($keys))) {
+                    global $user;
+                    $user = array_keys($keys)[array_search($token, array_values($keys))];
 
-                global $profile;
-                $profile = [
-                    "id" => $user
-                ];
-            } else {
+                    global $profile;
+                    $profile = [
+                        "id" => $user
+                    ];
+                } else {
+                    error(401);
+                }
+            } elseif (!$loggedIn) {
                 error(401);
             }
-        } else {
+        } elseif (!$loggedIn) {
             error(401);
         }
-    } elseif (!$loggedIn) {
-        error(401);
     }
 
     if (!in_array($_SERVER['REQUEST_METHOD'], $methods)) error(405);
@@ -82,7 +84,7 @@ function output($out) {
     die(json_encode($data));
 }
 
-function error($code) {
+function error($code, $detail = null) {
     switch ($code) {
         case 400:
             header("HTTP/1.1 400 Bad Request");
@@ -90,9 +92,9 @@ function error($code) {
                 "error" => [
                     "code" => 400,
                     "name" => "Bad Request",
-                    "see" => "https://sunnystarbot.equestria.dev/docs/"
+                    "see" => "https://voice-api.floo.fi/docs/"
                 ],
-                "output" => null
+                "output" => $detail
             ]));
 
         case 401:
@@ -101,9 +103,9 @@ function error($code) {
                 "error" => [
                     "code" => 401,
                     "name" => "Unauthorized",
-                    "see" => "https://sunnystarbot.equestria.dev/docs/"
+                    "see" => "https://voice-api.floo.fi/docs/"
                 ],
-                "output" => null
+                "output" => $detail
             ]));
 
         case 403:
@@ -112,9 +114,9 @@ function error($code) {
                 "error" => [
                     "code" => 403,
                     "name" => "Forbidden",
-                    "see" => "https://sunnystarbot.equestria.dev/docs/"
+                    "see" => "https://voice-api.floo.fi/docs/"
                 ],
-                "output" => null
+                "output" => $detail
             ]));
 
         case 404:
@@ -123,9 +125,9 @@ function error($code) {
                 "error" => [
                     "code" => 404,
                     "name" => "Not Found",
-                    "see" => "https://sunnystarbot.equestria.dev/docs/"
+                    "see" => "https://voice-api.floo.fi/docs/"
                 ],
-                "output" => null
+                "output" => $detail
             ]));
 
         case 405:
@@ -134,9 +136,9 @@ function error($code) {
                 "error" => [
                     "code" => 405,
                     "name" => "Method Not Allowed",
-                    "see" => "https://sunnystarbot.equestria.dev/docs/"
+                    "see" => "https://voice-api.floo.fi/docs/"
                 ],
-                "output" => null
+                "output" => $detail
             ]));
 
         case 409:
@@ -145,9 +147,9 @@ function error($code) {
                 "error" => [
                     "code" => 409,
                     "name" => "Conflict",
-                    "see" => "https://sunnystarbot.equestria.dev/docs/"
+                    "see" => "https://voice-api.floo.fi/docs/"
                 ],
-                "output" => null
+                "output" => $detail
             ]));
 
         case 413:
@@ -156,9 +158,9 @@ function error($code) {
                 "error" => [
                     "code" => 413,
                     "name" => "Payload Too Large",
-                    "see" => "https://sunnystarbot.equestria.dev/docs/"
+                    "see" => "https://voice-api.floo.fi/docs/"
                 ],
-                "output" => null
+                "output" => $detail
             ]));
 
         case 429:
@@ -167,9 +169,9 @@ function error($code) {
                 "error" => [
                     "code" => 429,
                     "name" => "Too Many Requests",
-                    "see" => "https://sunnystarbot.equestria.dev/docs/"
+                    "see" => "https://voice-api.floo.fi/docs/"
                 ],
-                "output" => null
+                "output" => $detail
             ]));
 
         case 451:
@@ -178,9 +180,9 @@ function error($code) {
                 "error" => [
                     "code" => 451,
                     "name" => "Unavailable For Legal Reasons",
-                    "see" => "https://sunnystarbot.equestria.dev/docs/"
+                    "see" => "https://voice-api.floo.fi/docs/"
                 ],
-                "output" => null
+                "output" => $detail
             ]));
 
         case 500:
@@ -189,13 +191,13 @@ function error($code) {
                 "error" => [
                     "code" => 500,
                     "name" => "Internal Server Error",
-                    "see" => "https://sunnystarbot.equestria.dev/docs/"
+                    "see" => "https://voice-api.floo.fi/docs/"
                 ],
-                "output" => null
+                "output" => $detail
             ]));
     }
 }
 
-if (in_array($profile["id"], json_decode(file_get_contents($_SERVER['DOCUMENT_ROOT'] . "/includes/tokens.json"), true)['oauth']['banned'])) {
+if (isset($profile) && in_array($profile["id"], json_decode(file_get_contents($_SERVER['DOCUMENT_ROOT'] . "/includes/tokens.json"), true)['oauth']['banned'])) {
     error(403);
 }

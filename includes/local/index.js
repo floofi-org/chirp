@@ -8,7 +8,7 @@ const { stdin: input, stdout: output } = require('node:process');
 try { cp.execSync("pkill -9 python3"); } catch (e) {}
 try { cp.execSync("pkill -9 Python"); } catch (e) {}
 
-console.log('Sunny Starbot local frontend');
+console.log('FVG local frontend');
 console.log("(c) Equestria.dev Developers");
 console.log("");
 
@@ -65,7 +65,7 @@ function start(version) {
     /*console.log("Model version: " + version);
     console.log("");*/
 
-    let p = cp.exec("source ./venv/bin/activate; python3 main.py versions/" + version, { stdio: "pipe", cwd: __dirname + "/../runtime" });
+    let p = cp.exec("./run.sh", { stdio: "pipe", cwd: __dirname + "/../runtime" });
     p.on('exit', (code) => {
         if (code !== 0) {
             throw new Error("Engine quit unexpectedly with code " + code);
@@ -126,10 +126,9 @@ function start(version) {
                         try {
                             cp.execSync("afplay audio.wav", { cwd: __dirname + "/../runtime/outputs/" + id, stdio: "ignore" });
                         } catch (e) {
-                            cp.execSync("aplay audio.wav", { cwd: __dirname + "/../runtime/outputs/" + id, stdio: "ignore" });
+                            cp.execSync("mplayer audio.wav", { cwd: __dirname + "/../runtime/outputs/" + id, stdio: "ignore" });
                         }
 
-                        fs.rmSync("../runtime/outputs/" + id, { recursive: true });
                         listen();
                     } else {
                         process.stdout.clearLine(null);
