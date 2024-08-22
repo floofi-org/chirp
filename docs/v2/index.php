@@ -49,7 +49,7 @@ function getAPIKey(): string {
         <li>All API requests must be authenticated, either with an interactive session or an API key. To get your API key, please check below.</li>
         <li>A single user is limited to a generation at once.</li>
         <li>Users making an abusive number of requests will get their account blocked.</li>
-        <li>Remember to follow the terms of use for Voice Generator, namely to properly credit your use of the platform as "Slyfox AI" or "Equestria.dev."</li>
+        <li>Remember to follow the Acceptable Use Policy for Voice Generator, namely to properly credit your use of the platform as "Floofi Voice Generator" or "Floofi."</li>
     </ul>
 
     <h3>Your API key</h3>
