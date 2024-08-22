@@ -3,7 +3,7 @@ document.getElementById("navbar-placeholder").outerHTML = `
     <nav id="mobile-navbar-inner" class="fella-nav-inner">
         <div id="mobile-navbar-inner-left" class="fella-nav-left">
             <div id="mobile-navbar-logo">
-                <a href="/" id="mobile-navbar-logo-link" class="fella-nav-icon-outer">
+                <a href="/app" id="mobile-navbar-logo-link" class="fella-nav-icon-outer">
                     <img src="/assets/wordmark.png" alt="Floofi Voice Generator" id="mobile-navbar-logo-img" class="fella-nav-icon">
                 </a>
             </div>
@@ -63,7 +63,7 @@ document.getElementById("navbar-placeholder").outerHTML = `
                     <a href="/terms" class="fella-nav-navigation-item-link">Policy</a>
                 </li>
                 <li class="fella-nav-navigation-item">
-                    <a href="https://voice-api.floo.fi/docs/" class="fella-nav-navigation-item-link">API Docs</a>
+                    <a href="https://voice-api.floo.fi/docs/" class="fella-nav-navigation-item-link" target="_blank">API Docs</a>
                 </li>
             </ul>
         </div>
