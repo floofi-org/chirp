@@ -55,7 +55,7 @@ function getAPIKey(): string {
     <h3>Your API key</h3>
     <p>Your API key is <b>strictly personal</b>, sharing it will allow anyone to use Voice Generator on your behalf. It is displayed below, and you can hover over it or tap it to display it.</p>
     <ul>
-        <li><code id="api-key"><?= getAPIKey() ?></code> · <a onclick="navigator.clipboard.writeText(document.getElementById('api-key').innerText.trim()); return false;" href="#">Copy</a>, <a onclick="return confirm('Are you sure? If you continue, you will need to change your API key in any application that is using it.');" href="/docs/reset.php">Reset</a></li>
+        <li><code id="api-key"><?= getAPIKey() ?></code> · <a onclick="navigator.clipboard.writeText(document.getElementById('api-key').innerText.trim()); return false;" href="#">Copy</a>, <a onclick="return confirm('Are you sure? If you continue, you will need to change your API key in any application that is using it.');" href="/server/docser/docs/reset.php">Reset</a></li>
     </ul>
     <p>To authenticate with the API, you need to set the <code>Authorization</code> header to <code>Bearer &lt;API key&gt;</code>. If you are logged into  through the website, your session will work on the API, although this is not a recommended way to use the API. If you are using Insomnia, click on the "Auth" tab and select "Bearer Token."</p>
     <p>Interactive authentication (for use with a web client) is done through the /auth/init and /auth/callback endpoints with OAuth2 authentication using Floofi ID. Note that CORS is used to prevent cross-site request forgery and that not all origins are able to use the API directly.</p>

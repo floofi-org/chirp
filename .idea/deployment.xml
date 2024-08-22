@@ -13,10 +13,10 @@
       <paths name="dabssi">
         <serverdata>
           <mappings>
-            <mapping deploy="/pool/web/sunnystarbot/staging" local="$PROJECT_DIR$" web="/" />
+            <mapping deploy="/pool/web/sunnystarbot/staging" local="$PROJECT_DIR$/server" web="/" />
           </mappings>
           <excludedPaths>
-            <excludedPath local="true" path="$PROJECT_DIR$/includes/runtime" />
+            <excludedPath local="true" path="$PROJECT_DIR$/server/includes/runtime" />
             <excludedPath local="true" path="$PROJECT_DIR$/client" />
           </excludedPaths>
         </serverdata>
