@@ -16,8 +16,8 @@
             <mapping deploy="/pool/web/sunnystarbot/staging" local="$PROJECT_DIR$" web="/" />
           </mappings>
           <excludedPaths>
-            <excludedPath local="true" path="$USER_HOME$/Projects/slyfox/includes/runtime" />
-            <excludedPath local="true" path="$USER_HOME$/Projects/slyfox/client" />
+            <excludedPath local="true" path="$PROJECT_DIR$/includes/runtime" />
+            <excludedPath local="true" path="$PROJECT_DIR$/client" />
           </excludedPaths>
         </serverdata>
       </paths>

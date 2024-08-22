@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Floofi Voice Generator</title>
+    <title>Acceptable Use Policy | Floofi Voice Generator</title>
     <link rel="stylesheet" href="https://fella.floo.fi/0.2.15/fella.min.css" integrity="sha384-eztimumAO0Zg4t/ZE8oRT0rHYZ5ww55HlcGsVKjJGeazQ3AqPcGhVfagZ6gBRJ+i" crossorigin="anonymous">
     <link rel="shortcut icon" href="/assets/favicon.png" type="image/svg+xml">
     <script>
@@ -69,15 +69,104 @@
         </svg>
     </div>
 
-    <div id="prompt" style="display: none;" class="fella-error">
-        <div>
-            <svg class="fella-error-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/><path d="m4.243 5.21 14.39 12.472"/></svg>
-            <div class="fella-error-title">You are banned</div>
-            <div class="fella-error-message">Unable to continue because you have infrigued the Acceptable Use Policy</div>
-            <a target="_blank" class="fella-btn fella-btn-primary fella-btn-flush fella-btn-large fella-error-btn" href="https://equestria.dev/contact">Contact us</a>
-        </div>
+    <div id="prompt" style="display: none;">
+        <div id="navbar-placeholder"></div>
+
+        <section class="fella-section fella-container">
+            <div class="fella-limited-width">
+                <h2 class="fella-title">Floofi Voice Generator Acceptable Use Policy</h2>
+                <p>
+                    This Acceptable Use Policy (AUP) governs your use of the Floofi Voice Generator and any associated
+                    access to its AI models. By using the Floofi Voice Generator, you acknowledge that you have read,
+                    understood, and agree to comply with the terms outlined below. This AUP is supplemental to the
+                    Floofi Systems Terms of Service and specifically applies to the use of the Voice Generator.
+                </p>
+
+                <h3>1. Access and Use</h3>
+                <ul>
+                    <li>
+                        Users are granted limited and non-transferable access to the Floofi Voice Generator, which may
+                        be revoked at any time at the discretion of the administrators, with or without cause.
+                    </li>
+                    <li>
+                        Floofi Systems reserves the right to monitor, store, and manually review all requests made to
+                        the service, including those that are blocked or deleted from user history, to ensure compliance
+                        with this AUP.
+                    </li>
+                </ul>
+
+                <h3>2. Content Restrictions</h3>
+                <ul>
+                    <li>
+                        All content generated using the Floofi Voice Generator must be family-friendly and must not
+                        cause harm or distress to any individual or group.
+                    </li>
+                    <li>
+                        Prohibited content includes, but is not limited to, material that is violent, explicit, vulgar,
+                        religiously or politically charged, defamatory, discriminatory, or otherwise harmful.
+                    </li>
+                    <li>
+                        Impersonation of individuals, organizations, or official entities, as well as the creation of
+                        content that falsely represents an affiliation with or endorsement by any entity, is strictly
+                        prohibited.
+                    </li>
+                    <li>
+                        When sharing generated content, users must credit "Floofi Voice Generator" or "Floofi" and
+                        ensure that the content is not mixed with outputs from other text-to-speech engines to prevent
+                        confusion.
+                    </li>
+                </ul>
+
+                <h3>3. Reasonable Usage</h3>
+                <ul>
+                    <li>
+                        The Floofi Voice Generator operates on limited resources. Users are expected to utilize the
+                        service in a fair, non-abusive manner.
+                    </li>
+                    <li>
+                        The use of automated software (e.g., bots) to generate content is strictly prohibited.
+                    </li>
+                    <li>
+                        Floofi Voice Generator employs rate limits to automatically block bots and excessive requests.
+                    </li>
+                    <li>
+                        Users who generate an excessive number of requests, even without automation, may face
+                        restrictions, including suspension or termination of access.
+                    </li>
+                </ul>
+
+                <h3>4. Prohibited Conduct</h3>
+                <ul>
+                    <li>
+                        Users must not attempt to circumvent any security measures or access restrictions imposed by
+                        the Floofi Voice Generator.
+                    </li>
+                    <li>
+                        While the source code that powers the Floofi Voice Generator website is open-source, the AI
+                        models themselves are proprietary and confidential. Any attempt to reverse engineer, decompile,
+                        or otherwise extract the underlying models or algorithms is strictly forbidden.
+                    </li>
+                    <li>
+                        Users may not use the Floofi Voice Generator for any unlawful activities or in ways that violate
+                        the rights of others, including privacy, intellectual property, and data protection rights.
+                    </li>
+                </ul>
+
+                <h3>5. Modifications</h3>
+                <ul>
+                    <li>
+                        Floofi Systems reserves the right to modify this Acceptable Use Policy at any time. Continued
+                        use of the Floofi Voice Generator following any such changes constitutes acceptance of the new
+                        terms.
+                    </li>
+                </ul>
+            </div>
+
+            <br><br><br>
+        </section>
     </div>
 
+    <script src="/assets/src/navbar.js"></script>
     <script>
         (async () => {
             let code = (await (await fetch("https://voice-api.floo.fi/api/v2/status", {
@@ -90,10 +179,11 @@
             if (code === 401) {
                 location.href = "/";
             } else if (code === 403) {
+                location.href = "/banned";
+            } else {
+                await prepareNavbar();
                 document.getElementById("loader").style.display = "none";
                 document.getElementById("prompt").style.display = "";
-            } else {
-                location.href = "/app";
             }
         })();
     </script>
