@@ -1,6 +1,6 @@
 <?php
 
-function getVersionFromTimestamp($timestamp = 0) {
+function getVersionFromTimestamp($timestamp = 0): string {
     $v2 = strtotime("2023-08-22");
     $v4 = strtotime("2023-08-23");
     $v6 = strtotime("2023-08-23");
@@ -19,7 +19,7 @@ function getVersionFromTimestamp($timestamp = 0) {
     return "1.0";
 }
 
-function getList($_ = true, $id = null, $count = INF, $new = false) {
+function getList($id = null, $count = INF, $new = false): array {
     global $profile;
     $data = [];
 
@@ -86,7 +86,7 @@ function getList($_ = true, $id = null, $count = INF, $new = false) {
     return array_slice($data, 0, $count < INF ? $count : null);
 }
 
-function getPossible() {
+function getPossible(): bool {
     global $profile;
     $possible = true;
 
@@ -102,8 +102,6 @@ function getPossible() {
 }
 
 function getFilterCode($original) {
-    $tokens = json_decode(file_get_contents($_SERVER['DOCUMENT_ROOT'] . "/includes/tokens.json"), true);
-
     $text = strtolower(trim($original ?? ""));
 
     $list = $list2 = explode("\n", trim(strtolower(file_get_contents($_SERVER['DOCUMENT_ROOT'] . "/includes/list.txt"))));
@@ -113,7 +111,6 @@ function getFilterCode($original) {
     }
 
     $code = 0;
-    $tripped = [];
 
     $ptext = " " . preg_replace("/ +/", " ", preg_replace("/[^a-z]/", " ", $text)) . " ";
 
@@ -123,10 +120,8 @@ function getFilterCode($original) {
         if (str_contains($ptext, $item)) {
             if (strlen($item) > 4 || str_contains($ptext, " " . $item . " ")) {
                 $code = 2;
-                $tripped[] = $item;
             } else if (str_contains($ptext, " " . $item . " ")) {
                 $code = 1;
-                $tripped[] = $item;
             }
         }
     }
@@ -138,7 +133,6 @@ function getFilterCode($original) {
             if (str_contains($ptext, $item)) {
                 if (str_contains($ptext, " " . $item . " ")) {
                     $code = 1;
-                    $tripped[] = $item;
                 }
             }
         }
@@ -146,7 +140,6 @@ function getFilterCode($original) {
 
     if (str_contains($text, "~") || trim($ptext) === "ah") {
         $code = 2;
-        $tripped[] = "~";
     }
 
     if ($code !== 2 && file_get_contents("https://www.purgomalum.com/service/containsprofanity?text=" . rawurlencode($text)) === "true") {

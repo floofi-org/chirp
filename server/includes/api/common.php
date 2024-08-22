@@ -4,7 +4,7 @@ $strictSession = false;
 require_once $_SERVER['DOCUMENT_ROOT'] . "/includes/session.php";
 global $loggedIn; global $profile;
 
-function _crash($errno, $message, $file, $line) {
+function _crash($errno, $message, $file, $line): void {
     file_put_contents("/tmp/error.txt", "[$errno] $message\n    at " . $file . ":" . $line . "\n");
     error(500, "[$errno] $message\n    at " . $file . ":" . $line . "\n");
 }
@@ -21,7 +21,7 @@ $data = [
 ];
 header("Content-Type: application/json");
 
-function endpoint($methods = ["GET"], $needsId = false, $parameters = [], $needsAuthentication = true) {
+function endpoint($methods = ["GET"], $needsId = false, $parameters = [], $needsAuthentication = true): void {
     global $parts; global $loggedIn;
 
     if ($needsAuthentication) {
@@ -78,13 +78,13 @@ function endpoint($methods = ["GET"], $needsId = false, $parameters = [], $needs
     }
 }
 
-function output($out) {
+function output($out): never {
     global $data;
     $data["output"] = $out;
     die(json_encode($data));
 }
 
-function error($code, $detail = null) {
+function error($code, $detail = null): void {
     switch ($code) {
         case 400:
             header("HTTP/1.1 400 Bad Request");

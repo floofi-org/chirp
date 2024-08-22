@@ -73,9 +73,6 @@ if (isset($result["access_token"])) {
     } else {
         header("Location: $callback/handoff#" . $handoff);
     }
-
-    die();
 } else {
     header("Location: /auth/init");
-    die();
 }

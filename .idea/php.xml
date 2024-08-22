@@ -11,6 +11,7 @@
     <option name="transferred" value="true" />
   </component>
   <component name="PhpProjectSharedConfiguration" php_language_level="8.2" />
+  <component name="PhpRuntimeConfiguration" document_root_path="server" />
   <component name="PhpStanOptionsConfiguration">
     <option name="transferred" value="true" />
   </component>

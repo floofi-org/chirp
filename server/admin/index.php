@@ -31,8 +31,8 @@ function getUserData($id) {
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Moderation center | Floofi Voice Generator</title>
-    <link href="/server/assets/bootstrap/bootstrap.min.css" rel="stylesheet">
-    <script src="/server/assets/bootstrap/bootstrap.min.js"></script>
+    <link href="/assets/bootstrap/bootstrap.min.css" rel="stylesheet">
+    <script src="/assets/bootstrap/bootstrap.min.js"></script>
     <link rel="shortcut icon" href="https://voice.floo.fi/assets/favicon.png" type="image/svg+xml">
 </head>
 <body>
@@ -83,7 +83,7 @@ function getUserData($id) {
                 <div <?= file_exists($_SERVER['DOCUMENT_ROOT'] . "/includes/outputs/" . $item . "/blocked.txt") ? (file_exists($_SERVER['DOCUMENT_ROOT'] . "/includes/outputs/" . $item . "/held.txt") ? 'class="text-danger"' : 'class="text-warning') : '' ?>><?= str_replace("<", "&lt;", str_replace(">", "&gt;", str_replace("&", "&amp;", file_get_contents($_SERVER['DOCUMENT_ROOT'] . "/includes/outputs/" . $item . "/input_orig.txt")))) ?></div>
                 <div>
                     <?= date('Y-m-d G:i:s e', (int)file_get_contents($_SERVER['DOCUMENT_ROOT'] . "/includes/outputs/" . $item . "/timestamp.txt")) ?><br>
-                    <a href="/server/adminr/admin/reviewed.php?id=<?= $item ?>">Mark as reviewed</a> · <a href="https://cdn.equestria.dev/sunnystarbot/content/<?= $item ?>/audio.wav" target="_blank">+</a>
+                    <a href="/admin/reviewed.php?id=<?= $item ?>">Mark as reviewed</a> · <a href="https://cdn.equestria.dev/sunnystarbot/content/<?= $item ?>/audio.wav" target="_blank">+</a>
                 </div>
             </div>
         <?php }} ?>

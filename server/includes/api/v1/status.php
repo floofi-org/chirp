@@ -2,7 +2,7 @@
 
 endpoint();
 
-function getProcessingUnits() {
+function getProcessingUnits(): array {
     $data = [];
     $out = [];
 

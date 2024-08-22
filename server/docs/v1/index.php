@@ -43,7 +43,7 @@ function getAPIKey(): string {
     <h1>Floofi Voice Generator API docs <span class="badge bg-secondary">v1</span></h1>
 
     <div class="alert alert-warning">
-        <b>Notice:</b> These docs are for version 1 of the API. The latest version is version 2, which you can get docs for <a href="/server/docser/docs/v2">here</a>. API version 1 may be removed at any time without warning and should be avoided.
+        <b>Notice:</b> These docs are for version 1 of the API. The latest version is version 2, which you can get docs for <a href="/docs/v2">here</a>. API version 1 may be removed at any time without warning and should be avoided.
     </div>
 
     <p>Voice Generator provides a RESTful API that you can use to interact with various features of the AI.</p>
@@ -59,7 +59,8 @@ function getAPIKey(): string {
     <h3>Your API key</h3>
     <p>Your API key is <b>strictly personal</b>, sharing it will allow anyone to use  on your behalf. It is displayed below, and you can hover over it or tap it to display it.</p>
     <ul>
-        <li><code id="api-key"><?= getAPIKey() ?></code> · <a onclick="navigator.clipboard.writeText(document.getElementById('api-key').innerText.trim()); return false;" href="#">Copy</a>, <a onclick="return confirm('Are you sure? If you continue, you will need to change your API key in any application that is using it.');" href="/server/docser/docs/reset.php">Reset</a></li>
+        <li><code id="api-key"><?= getAPIKey() ?></code> · <!--suppress JSUnresolvedReference -->
+            <a onclick="navigator.clipboard.writeText(document.getElementById('api-key').innerText.trim()); return false;" href="#">Copy</a>, <a onclick="return confirm('Are you sure? If you continue, you will need to change your API key in any application that is using it.');" href="/docs/reset.php">Reset</a></li>
     </ul>
     <p>To authenticate with the API, you need to set the <code>Authorization</code> header to <code>Bearer &lt;API key&gt;</code>. If you are logged into  through the website, your session will work on the API, although this is not a recommended way to use the API. If you are using Insomnia, click on the "Auth" tab and select "Bearer Token."</p>
 

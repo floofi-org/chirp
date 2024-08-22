@@ -104,14 +104,17 @@ function loadNavigation() {
                 document.getElementById("navbar-category").style.width = category.clientWidth + "px";
                 document.getElementById("navbar-category").style.height = category.clientHeight + "px";
 
-                if (window.categoryNavigationItem) document.getElementById("navbar-category-outer").onmouseleave({
-                    _switching: true
-                });
+                if (window.categoryNavigationItem) { // noinspection JSCheckFunctionSignatures
+                    document.getElementById("navbar-category-outer").onmouseleave({
+                        _switching: true
+                    });
+                }
 
                 category.classList.remove("hide");
                 category.classList.add("show");
                 window.categorySection = category;
             } else {
+                // noinspection JSCheckFunctionSignatures
                 document.getElementById("navbar-category-outer").onmouseleave({});
             }
 

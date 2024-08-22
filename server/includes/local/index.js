@@ -12,59 +12,10 @@ console.log('FVG local frontend');
 console.log("(c) Equestria.dev Developers");
 console.log("");
 
-/*console.log("Available versions:");
-let list = fs.readdirSync(__dirname + "/../runtime/versions").sort((a, b) => {
-    return parseInt(b.split(".")[0]) - parseInt(a.split(".")[0]);
-});
-list.map((i, j) => {
-    console.log("- " + i);
-});
-
-function select() {
-    const rl = readline.createInterface({ input, output });
-
-    rl.on('SIGINT', () => {
-        if (typeof p !== "undefined") p.kill("SIGKILL");
-        try { cp.execSync("pkill -9 python3"); } catch (e) {}
-        try { cp.execSync("pkill -9 Python"); } catch (e) {}
-        process.exit(0);
-    });
-
-    rl.question('\nEnter version number: ', (answer) => {
-        rl.close();
-
-        let version = null;
-        let matches = 0;
-
-        for (let v of list) {
-            if (v.startsWith(answer)) {
-                matches++;
-                version = v;
-            }
-        }
-
-        if (matches === 0) {
-            console.log("Could not find the wanted version.");
-            select();
-            return;
-        } else if (matches > 1) {
-            console.log("More than one version is matching your query.");
-            select();
-            return;
-        }
-
-        start(version);
-    });
-}
-
-select();*/
-
 start("../MLPTTS");
 
-function start(version) {
-    /*console.log("Model version: " + version);
-    console.log("");*/
-
+function start() {
+    // noinspection JSCheckFunctionSignatures
     let p = cp.exec("./run.sh", { stdio: "pipe", cwd: __dirname + "/../runtime" });
     p.on('exit', (code) => {
         if (code !== 0) {
