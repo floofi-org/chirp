@@ -66,7 +66,7 @@ function getAPIKey(): string {
 error?: {
     code: number,
     name: string,
-    see: "https://<?= $_SERVER['HTTP_HOST'] ?>/docs/"
+    see: "https://voice-api.floo.fi/docs/"
 }
 output: any|null
     </pre>
@@ -140,7 +140,7 @@ output: any|null
     </table>
 
     <h3>Endpoints</h3>
-    <p>All API endpoints take root in https://<?= $_SERVER['HTTP_HOST'] ?>/api.</p>
+    <p>All API endpoints take root in https://voice-api.floo.fi/api.</p>
     <table class="table">
         <thead>
         <tr>

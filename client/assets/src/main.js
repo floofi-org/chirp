@@ -1,5 +1,5 @@
 (async () => {
-    let code = (await (await fetch("https://voice-api.floo.fi/api/v2/status", {
+    let code = (await (await fetch(window.SERVER + "/api/v2/status", {
         credentials: "include",
         headers: {
             "Authorization": localStorage.getItem('token') ? "PrivateToken " + localStorage.getItem('token') : ''
@@ -24,7 +24,7 @@
         return await _fetch(input, init);
     }
 
-    window.models = (await (await fetch("https://voice-api.floo.fi/api/v2/models")).json()).output;
+    window.models = (await (await fetch(window.SERVER + "/api/v2/models")).json()).output;
     window.processing = false;
 
     document.getElementById("model").innerHTML = window.models.map(i => `
@@ -65,7 +65,7 @@
             document.getElementById("submit-btn").classList.add("disabled");
             document.getElementById("input").disabled = true;
 
-            fetch("https://voice-api.floo.fi/api/v2/generate", {
+            fetch(window.SERVER + "/api/v2/generate", {
                 method: "POST",
                 headers: {
                     'Content-Type': 'application/json'
@@ -81,14 +81,14 @@
                     if (!data['error']) {
                         document.getElementById("input").value = "";
 
-                        fetch("https://voice-api.floo.fi/api/v2/history?amount=30").then((res) => {
+                        fetch(window.SERVER + "/api/v2/history?amount=30").then((res) => {
                             res.json().then((data) => {
                                 window.listData = data['output']['history'];
                                 refreshList();
                             });
                         });
 
-                        fetch("https://voice-api.floo.fi/api/v2/available").then((res) => {
+                        fetch(window.SERVER + "/api/v2/available").then((res) => {
                             res.json().then((data) => {
                                 window.possibleData = data['output']['available'];
                                 checkPossible();
@@ -172,10 +172,10 @@
     window.playerDelete = (id) => {
         document.getElementById("history-" + id).outerHTML = "";
 
-        fetch("https://voice-api.floo.fi/api/v2/history/" + id, {
+        fetch(window.SERVER + "/api/v2/history/" + id, {
             method: "DELETE"
         }).then(() => {
-            fetch("https://voice-api.floo.fi/api/v2/history?amount=30").then((res) => {
+            fetch(window.SERVER + "/api/v2/history?amount=30").then((res) => {
                 res.json().then((data) => {
                     window.listData = data['output']['history'];
                     window.lastList = data['output']['history'];
@@ -387,14 +387,14 @@
 
     window.configureRefresh = () => {
         function refresh() {
-            fetch("https://voice-api.floo.fi/api/v2/history?amount=30").then((res) => {
+            fetch(window.SERVER + "/api/v2/history?amount=30").then((res) => {
                 res.json().then((data) => {
                     window.listData = data['output']['history'];
                     refreshList();
                 });
             });
 
-            fetch("https://voice-api.floo.fi/api/v2/available").then((res) => {
+            fetch(window.SERVER + "/api/v2/available").then((res) => {
                 res.json().then((data) => {
                     window.possibleData = data['output']['available'];
                     checkPossible();

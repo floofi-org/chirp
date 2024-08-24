@@ -11,6 +11,7 @@
     <script>
         let FF_FOUC_FIX;
     </script>
+    <script src="/assets/src/config.js"></script>
 </head>
 <body>
 <br><br>
@@ -74,7 +75,7 @@
         (async () => {
             window.handoffToken = location.hash.substring(1);
 
-            let handoff = await (await fetch("https://voice-api.floo.fi/api/v2/handoff", {
+            let handoff = await (await fetch(window.SERVER + "/api/v2/handoff", {
                 method: "POST",
                 headers: {
                     'Content-Type': 'application/json'

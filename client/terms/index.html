@@ -11,6 +11,7 @@
     <script>
         let FF_FOUC_FIX;
     </script>
+    <script src="/assets/src/config.js"></script>
 </head>
 <body>
 <br><br>
@@ -170,7 +171,7 @@
     <script src="/assets/src/navbar.js"></script>
     <script>
         (async () => {
-            let code = (await (await fetch("https://voice-api.floo.fi/api/v2/status", {
+            let code = (await (await fetch(window.SERVER + "/api/v2/status", {
                 credentials: "include",
                 headers: {
                     "Authorization": localStorage.getItem('token') ? "PrivateToken " + localStorage.getItem('token') : ''

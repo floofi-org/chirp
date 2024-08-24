@@ -14,3 +14,7 @@ server/includes/runtime/versions
 server/includes/keys.json
 server/includes/recaptcha
 client/.vercel
+serverkt/config.json
+serverkt/tokens
+serverkt/.gradle
+serverkt/build
