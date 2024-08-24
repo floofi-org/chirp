@@ -18,3 +18,5 @@ serverkt/config.json
 serverkt/tokens
 serverkt/.gradle
 serverkt/build
+serverkt/out
+serverkt/.kotlin
