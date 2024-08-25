@@ -77,6 +77,17 @@ function getUserData($id) {
                     if (isset($user)): ?>
                         <div><?= str_replace("<", "&lt;", str_replace(">", "&gt;", str_replace("&", "&amp;", $user["name"]))) ?></div>
                         <div class="text-muted"><?= $user["profile"]["email"]["email"] ?></div>
+                        <div class="text-muted"><?php
+
+                        $models = json_decode(file_get_contents($_SERVER['DOCUMENT_ROOT'] . "/includes/models.json"), true);
+                        $m = file_exists($_SERVER['DOCUMENT_ROOT'] . "/includes/outputs/" . $item . "/model.txt") ? trim(file_get_contents($_SERVER['DOCUMENT_ROOT'] . "/includes/outputs/" . $item . "/model.txt")) : "sunny";
+                        if (isset($models[$m])) {
+                            echo($models[$m]["name"]);
+                        } else {
+                            echo($m);
+                        }
+
+                        ?></div>
                     <?php else: ?>
                         <code><?= $user["id"] ?></code>
                     <?php endif; ?></div>
@@ -87,6 +98,8 @@ function getUserData($id) {
                 </div>
             </div>
         <?php }} ?>
+
+        <p class="text-muted small mt-3">P = Processed<br>W = Working<br>C = Crashed<br>F = Filtered<br>B = Blocked</p>
 
         <br><br>
     </div>
