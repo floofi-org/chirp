@@ -3,7 +3,7 @@ package fi.floo.voice.types
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class APIResponse(
+data class APIResponse<T>(
     val error: APIResponseError?,
-    val output: APIResponseOutput?
+    val output: T?
 )

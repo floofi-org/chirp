@@ -83,12 +83,12 @@ suspend fun authCallback(call: ApplicationCall) {
 
         if (config.development) {
             val handoffToken = generateToken(32)
-            val handoffData = HandoffData(handoffToken, DateTimeFormatter.ISO_INSTANT.format(Instant.now()))
+            val handoffData = HandoffData(sessionToken, Instant.now().toEpochMilli())
             File("tokens/handoff/$handoffToken").writer().use { f ->
                 f.write(Json.encodeToString(handoffData))
             }
 
-            call.respondRedirect("http://127.0.0.1:3000/handoff#$handoffToken")
+            call.respondRedirect("http://localhost:3000/handoff#$handoffToken")
         } else {
             call.respondRedirect("https://voice.floo.fi/app")
         }

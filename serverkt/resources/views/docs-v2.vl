@@ -107,7 +107,7 @@ output: any|null
             <tr>
                 <td>451</td>
                 <td>Unavailable For Legal Reasons</td>
-                <td>The request goes against 's content filters and/or terms of use.</td>
+                <td>The request goes against Voice Generator's content filters and/or applicable use policy.</td>
             </tr>
             <tr>
                 <td>500</td>
@@ -137,7 +137,7 @@ output: any|null
         <tbody>
         <tr>
             <td><code>GET</code></td>
-            <td>v2/models</td>
+            <td>v2/models<br><span class="badge bg-secondary-subtle">Kotlin</span></td>
             <td>-</td>
             <td>Get the available models.</td>
             <td><pre>[
@@ -151,18 +151,18 @@ output: any|null
         </tr>
         <tr>
             <td><code>GET</code></td>
-            <td>v2/status</td>
+            <td>v2/status<br><span class="badge bg-secondary-subtle">Kotlin</span></td>
             <td>-</td>
             <td>Get system information.</td>
             <td><pre>{
-    "user": string,
+    "user": string<!--,
     "processingUnits": [
         {
             "id": string,
             "pid": number,
             "busy": boolean
         }
-    ]
+    ]-->
 }</pre></td>
         </tr>
         <tr>
@@ -238,7 +238,7 @@ output: any|null
         </tr>
         <tr>
             <td><code>POST</code></td>
-            <td>v2/handoff</td>
+            <td>v2/handoff<br><span class="badge bg-secondary-subtle">Kotlin</span></td>
             <td>JSON <code>token</code>: string</td>
             <td>Get an interactive access token from a client handoff token. Used only during development.</td>
             <td><pre>{

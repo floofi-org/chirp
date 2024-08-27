@@ -1,10 +1,10 @@
 package fi.floo.voice
 
-import fi.floo.voice.types.APIResponse
-import fi.floo.voice.types.APIResponseError
-import fi.floo.voice.types.UserData
+import fi.floo.voice.types.*
 import io.ktor.http.*
 import io.ktor.server.application.*
+import io.ktor.server.response.*
+import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import java.io.File
 import java.security.SecureRandom
@@ -95,7 +95,7 @@ fun getAPIKey(id: String): String {
     return file.readText().trim()
 }
 
-fun throwableToError(throwable: Throwable): APIResponse {
+fun throwableToError(throwable: Throwable): APIResponse<Unit> {
     return APIResponse(
         error = APIResponseError(
             code = 500,
@@ -107,7 +107,7 @@ fun throwableToError(throwable: Throwable): APIResponse {
     )
 }
 
-fun httpCodeToError(code: HttpStatusCode): APIResponse {
+fun httpCodeToError(code: HttpStatusCode): APIResponse<Unit> {
     return APIResponse(
         error = APIResponseError(
             code = code.value,
@@ -117,4 +117,24 @@ fun httpCodeToError(code: HttpStatusCode): APIResponse {
         ),
         output = null
     )
+}
+
+suspend fun getAuthenticationData(call: ApplicationCall, mode: AuthenticationMode): AuthenticationData {
+    return when (mode) {
+        AuthenticationMode.Disabled -> AuthenticationData(false, null, null)
+        AuthenticationMode.Enforced, AuthenticationMode.Permissive -> {
+            val session = getSession(call)
+
+            if (session == null) {
+                if (mode == AuthenticationMode.Enforced) {
+                    call.respondText(text = Json.encodeToString(httpCodeToError(HttpStatusCode.Unauthorized)),
+                        status = HttpStatusCode.Unauthorized, contentType = ContentType.Application.Json)
+                }
+                AuthenticationData(false, null, null)
+            } else {
+                val apiKey = getAPIKey(session.id)
+                AuthenticationData(true, session, apiKey)
+            }
+        }
+    }
 }

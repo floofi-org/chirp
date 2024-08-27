@@ -9,5 +9,6 @@ data class Config(
     val admin: String,
     val id: String,
     val secret: String,
-    val banned: Collection<String>
+    val banned: Collection<String>,
+    val models: Map<String, ModelConfig>
 )

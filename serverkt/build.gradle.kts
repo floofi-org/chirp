@@ -31,6 +31,7 @@ dependencies {
     implementation("io.ktor:ktor-server-cors:$ktor_version")
     implementation("io.ktor:ktor-server-status-pages:$ktor_version")
     implementation("io.ktor:ktor-server-velocity:$ktor_version")
+    implementation("io.ktor:ktor-server-content-negotiation:$ktor_version")
 
     // Ktor client core
     implementation("io.ktor:ktor-client-core:$ktor_version")
