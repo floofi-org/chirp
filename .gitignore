@@ -20,3 +20,4 @@ serverkt/.gradle
 serverkt/build
 serverkt/out
 serverkt/.kotlin
+serverkt/*.jar
