@@ -140,14 +140,16 @@ output: any|null
             <td>v2/models<br><span class="badge bg-secondary-subtle">Kotlin</span></td>
             <td>-</td>
             <td>Get the available models.</td>
-            <td><pre>[
-    {
-        "id": string,
-        "name": string,
-        "source": string,
-        "version": string
-    }
-]</pre></td>
+            <td><pre>{
+    "models": [
+        {
+            "id": string,
+            "name": string,
+            "source": string,
+            "version": string
+        }
+    ]
+}</pre></td>
         </tr>
         <tr>
             <td><code>GET</code></td>
@@ -179,19 +181,21 @@ output: any|null
             <td>v2/history<br><span class="badge bg-secondary-subtle">Kotlin</span></td>
             <td>URL: <code>amount</code>: number (optional)</td>
             <td>Get previous generations associated with this account.</td>
-            <td><pre>[
-    {
-        "id": string,
-        "version": string,
-        "author": string,
-        "status": generation-status,
-        "input": string,
-        "filename": string,
-        "audio_url": string?,
-        "explicit": boolean,
-        "model": string
-    }
-]</pre></td>
+            <td><pre>{
+    "history": [
+        {
+            "id": string,
+            "model": string,
+            "version": string,
+            "author": string,
+            "time": string,
+            "timeTs": number,
+            "audioUrl": string?,
+            "input": string,
+            "status": generation-status,
+        }
+    ]
+}</pre></td>
         </tr>
         <tr>
             <td><code>GET</code></td>
@@ -200,14 +204,14 @@ output: any|null
             <td>Get a specific generation from its ID.</td>
             <td><pre>{
     "id": string,
+    "model": string,
     "version": string,
     "author": string,
-    "status": generation-status,
+    "time": string,
+    "timeTs": number,
+    "audioUrl": string?,
     "input": string,
-    "filename": string,
-    "audio_url": string?,
-    "explicit": boolean,
-    "model": string
+    "status": generation-status,
 }</pre></td>
         </tr>
         <tr>
@@ -217,14 +221,14 @@ output: any|null
             <td>Remove a specific generation from your history using its ID.</td>
             <td><pre>{
     "id": string,
+    "model": string,
     "version": string,
     "author": string,
-    "status": "removed",
+    "time": string,
+    "timeTs": number,
+    "audioUrl": string?,
     "input": string,
-    "filename": string,
-    "audio_url": null,
-    "explicit": boolean,
-    "model": string
+    "status": "removed",
 }</pre></td>
         </tr>
         <tr>
@@ -250,7 +254,7 @@ output: any|null
 
     <h3>Types</h3>
     <h5>generation-status</h5>
-    <pre>"removed"|"processed"|"generating"|"queued"|"crashed"</pre>
+    <pre>"removed"|"processed"|"generating"|"queued"|"blocked"</pre>
 
     <br><br><br>
 </div>

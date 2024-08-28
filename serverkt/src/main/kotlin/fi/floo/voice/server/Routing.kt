@@ -19,8 +19,11 @@ fun Application.configureRouting() {
         get("/auth/init") { authInit(call) }
         get("/auth/callback") { authCallback(call) }
         get("/docs") { docs(call) }
+        get("/docs/") { docs(call) }
         get("/docs/v1") { docsV1(call) }
+        get("/docs/v1/") { docsV1(call) }
         get("/docs/v2") { docsV2(call) }
+        get("/docs/v2/") { docsV2(call) }
 
         get("/api/v2/models") { apiV2Models(call) }
         get("/api/v2/status") { apiV2Status(call) }

@@ -18,6 +18,6 @@ suspend fun apiV2History(call: ApplicationCall) {
 
     call.respond(HttpStatusCode.OK, APIResponse(
         error = null,
-        output = list.flatten()
+        output = APIResponseHistory(list.flatten())
     ))
 }

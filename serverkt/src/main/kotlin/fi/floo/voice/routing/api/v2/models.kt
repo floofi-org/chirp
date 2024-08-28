@@ -2,10 +2,7 @@ package fi.floo.voice.routing.api.v2
 
 import fi.floo.voice.config
 import fi.floo.voice.getAuthenticationData
-import fi.floo.voice.types.APIResponse
-import fi.floo.voice.types.APIResponseModel
-import fi.floo.voice.types.APIResponseModels
-import fi.floo.voice.types.AuthenticationMode
+import fi.floo.voice.types.*
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.response.*
@@ -29,6 +26,6 @@ suspend fun apiV2Models(call: ApplicationCall) {
 
     call.respond(HttpStatusCode.OK, APIResponse(
         error = null,
-        output = models
+        output = APIResponseModelsObject(models)
     ))
 }

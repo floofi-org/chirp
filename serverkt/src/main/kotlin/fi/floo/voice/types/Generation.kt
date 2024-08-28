@@ -17,7 +17,7 @@ class Generation(val data: GenerationData) {
             if (files != null) {
                 for (file in files) {
                     list.inner.add(fromDirectory(file))
-                    list.inner.sortBy { it.time }
+                    list.inner.sortByDescending { it.time }
                     list.inner = list.inner
                         .filter { it.data.version != "0" }
                         .filter { it.data.model != "" }
@@ -75,7 +75,7 @@ class Generation(val data: GenerationData) {
                 author = author,
                 time = dateIso,
                 timeTs = timeTs,
-                audioUrl = "",
+                audioUrl = "https://cdn.equestria.dev/sunnystarbot/${directory.name}/audio.wav",
                 input = input,
                 status = status
             )
