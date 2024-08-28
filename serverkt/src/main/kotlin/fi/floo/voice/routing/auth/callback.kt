@@ -19,7 +19,6 @@ import kotlinx.serialization.json.Json
 import java.io.File
 import java.net.URLEncoder
 import java.time.Instant
-import java.time.format.DateTimeFormatter
 import java.util.*
 
 suspend fun authCallback(call: ApplicationCall) {
@@ -68,11 +67,11 @@ suspend fun authCallback(call: ApplicationCall) {
         val userDataString = response.body<String>()
         val sessionToken = generateToken(96)
 
-        File("tokens/session/$sessionToken").writer().use { f ->
+        File("data/session/$sessionToken").writer().use { f ->
             f.write(userDataString)
         }
 
-        File("tokens/users/${userData.id}").writer().use { f ->
+        File("data/users/${userData.id}").writer().use { f ->
             f.write(userDataString)
         }
 
@@ -84,7 +83,7 @@ suspend fun authCallback(call: ApplicationCall) {
         if (config.development) {
             val handoffToken = generateToken(32)
             val handoffData = HandoffData(sessionToken, Instant.now().toEpochMilli())
-            File("tokens/handoff/$handoffToken").writer().use { f ->
+            File("data/handoff/$handoffToken").writer().use { f ->
                 f.write(Json.encodeToString(handoffData))
             }
 

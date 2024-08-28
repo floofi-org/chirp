@@ -6,14 +6,18 @@ import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.response.*
 
-suspend fun apiV2Status(call: ApplicationCall) {
+suspend fun apiV2History(call: ApplicationCall) {
     val auth = getAuthenticationData(call, AuthenticationMode.Enforced)
     if (!auth.authenticated || auth.userData == null) return
 
+    val list: GenerationList = Generation.forUser(auth.userData)
+    list.inner = list.inner
+        .filter { it.data.status != "blocked" }
+        .filter { it.data.status != "removed" }
+        .toMutableList()
+
     call.respond(HttpStatusCode.OK, APIResponse(
         error = null,
-        output = APIResponseStatus(
-            user = auth.userData.id
-        )
+        output = list.flatten()
     ))
 }

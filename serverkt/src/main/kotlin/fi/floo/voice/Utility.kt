@@ -49,7 +49,7 @@ fun getSession(call: ApplicationCall): UserData? {
 
     if (sessionCookie != null && !sessionCookie.contains('/') && !sessionCookie.contains('\\') &&
         !sessionCookie.contains('.')) {
-        val file = File("tokens/session/$sessionCookie")
+        val file = File("data/session/$sessionCookie")
 
         if (file.exists()) {
             val dataString = file.readText()
@@ -62,11 +62,11 @@ fun getSession(call: ApplicationCall): UserData? {
         !authenticationHeader.contains("..")) {
         if (authenticationHeader.startsWith("Bearer ")) {
             val key = authenticationHeader.substring(7)
-            val idFile = File("tokens/keys/$key")
+            val idFile = File("data/keys/$key")
 
             if (idFile.exists()) {
                 val id = idFile.readText().trim()
-                val dataFile = File("tokens/users/$id")
+                val dataFile = File("data/users/$id")
 
                 if (dataFile.exists()) {
                     val dataString = dataFile.readText()
@@ -84,7 +84,7 @@ fun getSession(call: ApplicationCall): UserData? {
 }
 
 fun getAPIKey(id: String): String {
-    val file = File("tokens/keys/$id")
+    val file = File("data/keys/$id")
 
     if (!file.exists()) {
         file.writer().use { f ->

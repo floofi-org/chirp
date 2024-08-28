@@ -167,7 +167,7 @@ output: any|null
         </tr>
         <tr>
             <td><code>GET</code></td>
-            <td>v2/available</td>
+            <td>v2/available<br><span class="badge bg-secondary-subtle">Kotlin</span></td>
             <td>-</td>
             <td>Check if enqueing a new generation is possible.</td>
             <td><pre>{
@@ -176,7 +176,7 @@ output: any|null
         </tr>
         <tr>
             <td><code>GET</code></td>
-            <td>v2/history</td>
+            <td>v2/history<br><span class="badge bg-secondary-subtle">Kotlin</span></td>
             <td>URL: <code>amount</code>: number (optional)</td>
             <td>Get previous generations associated with this account.</td>
             <td><pre>[

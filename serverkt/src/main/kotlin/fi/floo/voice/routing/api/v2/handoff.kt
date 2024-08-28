@@ -1,27 +1,19 @@
 package fi.floo.voice.routing.api.v2
 
-import fi.floo.voice.config
-import fi.floo.voice.getAuthenticationData
 import fi.floo.voice.httpCodeToError
 import fi.floo.voice.types.*
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
-import kotlinx.serialization.decodeFromString
-import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import java.io.File
 import java.time.Instant
-import java.time.LocalDate
-import java.time.LocalDateTime
-import java.time.Period
-import kotlin.time.Duration
 
 suspend fun apiV2Handoff(call: ApplicationCall) {
     val handoffRequestData = call.receive<HandoffRequestData>()
 
-    val file = File("tokens/handoff/${handoffRequestData.token}")
+    val file = File("data/handoff/${handoffRequestData.token}")
 
     if (file.exists()) {
         val dataString = file.readText()

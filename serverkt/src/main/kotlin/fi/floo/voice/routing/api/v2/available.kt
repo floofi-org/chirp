@@ -6,14 +6,16 @@ import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.response.*
 
-suspend fun apiV2Status(call: ApplicationCall) {
+suspend fun apiV2Available(call: ApplicationCall) {
     val auth = getAuthenticationData(call, AuthenticationMode.Enforced)
     if (!auth.authenticated || auth.userData == null) return
 
+    val list: GenerationList = Generation.forUser(auth.userData)
+    val items = list.inner
+        .map { it.data.status == "generating" || it.data.status == "queued" }
+
     call.respond(HttpStatusCode.OK, APIResponse(
         error = null,
-        output = APIResponseStatus(
-            user = auth.userData.id
-        )
+        output = APIResponseAvailable(!items.contains(true))
     ))
 }

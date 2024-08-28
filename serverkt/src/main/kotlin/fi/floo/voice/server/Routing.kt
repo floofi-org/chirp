@@ -3,9 +3,7 @@ package fi.floo.voice.server
 import fi.floo.voice.routing.auth.*
 import fi.floo.voice.routing.docs.*
 import fi.floo.voice.routing.*
-import fi.floo.voice.routing.api.v2.apiV2Handoff
-import fi.floo.voice.routing.api.v2.apiV2Models
-import fi.floo.voice.routing.api.v2.apiV2Status
+import fi.floo.voice.routing.api.v2.*
 import io.ktor.server.application.*
 import io.ktor.server.http.content.*
 import io.ktor.server.routing.*
@@ -26,8 +24,8 @@ fun Application.configureRouting() {
 
         get("/api/v2/models") { apiV2Models(call) }
         get("/api/v2/status") { apiV2Status(call) }
-        // TODO: GET available
-        // TODO: GET history
+        get("/api/v2/available") { apiV2Available(call) }
+        get("/api/v2/history") { apiV2History(call) }
         // TODO: GET history/:id
         // TODO: DELETE history
         // TODO: POST generate

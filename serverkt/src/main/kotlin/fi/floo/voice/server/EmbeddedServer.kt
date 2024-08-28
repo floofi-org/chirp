@@ -12,8 +12,6 @@ import io.ktor.server.plugins.cors.routing.*
 import io.ktor.server.plugins.statuspages.*
 import io.ktor.server.response.*
 import io.ktor.server.velocity.*
-import kotlinx.serialization.encodeToString
-import kotlinx.serialization.json.Json
 
 fun getServer(): NettyApplicationEngine {
     return embeddedServer(Netty, port = 8080, host = "0.0.0.0") {

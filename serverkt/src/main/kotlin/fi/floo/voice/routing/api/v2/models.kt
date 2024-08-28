@@ -9,8 +9,6 @@ import fi.floo.voice.types.AuthenticationMode
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.response.*
-import kotlinx.serialization.encodeToString
-import kotlinx.serialization.json.Json
 
 suspend fun apiV2Models(call: ApplicationCall) {
     val auth = getAuthenticationData(call, AuthenticationMode.Enforced)

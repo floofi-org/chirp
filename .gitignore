@@ -16,6 +16,7 @@ server/includes/recaptcha
 client/.vercel
 serverkt/config.json
 serverkt/tokens
+serverkt/data
 serverkt/.gradle
 serverkt/build
 serverkt/out

@@ -2,6 +2,7 @@ package fi.floo.voice.types
 
 import kotlinx.serialization.Serializable
 
+@Suppress("PropertyName")
 @Serializable
 data class AccessToken(
     val access_token: String,
