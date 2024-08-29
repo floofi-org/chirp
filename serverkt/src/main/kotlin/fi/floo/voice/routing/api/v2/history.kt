@@ -16,8 +16,15 @@ suspend fun apiV2History(call: ApplicationCall) {
         .filter { it.data.status != "removed" }
         .toMutableList()
 
+    val amount = call.parameters["amount"]
+
+    if (amount != null) {
+        val amountInt = amount.toInt()
+        list.inner = list.inner.subList(0, amountInt)
+    }
+
     call.respond(HttpStatusCode.OK, APIResponse(
         error = null,
-        output = APIResponseHistory(list.flatten())
+        output = APIResponseHistory(list.inner.size, list.flatten())
     ))
 }

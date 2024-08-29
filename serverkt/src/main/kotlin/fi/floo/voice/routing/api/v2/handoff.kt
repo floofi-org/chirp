@@ -13,6 +13,11 @@ import java.time.Instant
 suspend fun apiV2Handoff(call: ApplicationCall) {
     val handoffRequestData = call.receive<HandoffRequestData>()
 
+    if (handoffRequestData.token.length > 32) {
+        call.respond(HttpStatusCode.PayloadTooLarge, httpCodeToError(HttpStatusCode.PayloadTooLarge))
+        return
+    }
+
     val file = File("data/handoff/${handoffRequestData.token}")
 
     if (file.exists()) {

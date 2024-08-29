@@ -11,6 +11,7 @@ data class GenerationData(
     val time: String,
     val timeTs: Long,
     val audioUrl: String,
+    val graphUrl: String,
     val input: String,
     var status: String
 )

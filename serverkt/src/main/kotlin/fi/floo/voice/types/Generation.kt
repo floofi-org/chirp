@@ -75,12 +75,23 @@ class Generation(val data: GenerationData) {
                 author = author,
                 time = dateIso,
                 timeTs = timeTs,
-                audioUrl = "https://cdn.equestria.dev/sunnystarbot/${directory.name}/audio.wav",
+                audioUrl = "https://cdn.floo.fi/voice-generator/${directory.name}/audio.wav",
+                graphUrl = "https://cdn.floo.fi/voice-generator/${directory.name}/figure.png",
                 input = input,
                 status = status
             )
 
             return Generation(data)
+        }
+
+        fun fromId(id: String): Generation? {
+            val file = File("data/generations/$id")
+
+            return if (file.exists()) {
+                fromDirectory(file)
+            } else {
+                null
+            }
         }
     }
 }

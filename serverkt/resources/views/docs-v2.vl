@@ -141,6 +141,7 @@ output: any|null
             <td>-</td>
             <td>Get the available models.</td>
             <td><pre>{
+    "count": number,
     "models": [
         {
             "id": string,
@@ -182,6 +183,7 @@ output: any|null
             <td>URL: <code>amount</code>: number (optional)</td>
             <td>Get previous generations associated with this account.</td>
             <td><pre>{
+    "count": number,
     "history": [
         {
             "id": string,
@@ -191,6 +193,7 @@ output: any|null
             "time": string,
             "timeTs": number,
             "audioUrl": string?,
+            "graphUrl": string?,
             "input": string,
             "status": generation-status,
         }
@@ -199,7 +202,7 @@ output: any|null
         </tr>
         <tr>
             <td><code>GET</code></td>
-            <td>v2/history/<b>:id</b></td>
+            <td>v2/history/<b>:id</b><br><span class="badge bg-secondary-subtle">Kotlin</span></td>
             <td>-</td>
             <td>Get a specific generation from its ID.</td>
             <td><pre>{
@@ -210,13 +213,14 @@ output: any|null
     "time": string,
     "timeTs": number,
     "audioUrl": string?,
+    "graphUrl": string?,
     "input": string,
     "status": generation-status,
 }</pre></td>
         </tr>
         <tr>
             <td><code>DELETE</code></td>
-            <td>v2/history/<b>:id</b></td>
+            <td>v2/history/<b>:id</b><br><span class="badge bg-secondary-subtle">Kotlin</span></td>
             <td>-</td>
             <td>Remove a specific generation from your history using its ID.</td>
             <td><pre>{
@@ -227,6 +231,7 @@ output: any|null
     "time": string,
     "timeTs": number,
     "audioUrl": string?,
+    "graphUrl": string?,
     "input": string,
     "status": "removed",
 }</pre></td>

@@ -26,6 +26,6 @@ suspend fun apiV2Models(call: ApplicationCall) {
 
     call.respond(HttpStatusCode.OK, APIResponse(
         error = null,
-        output = APIResponseModelsObject(models)
+        output = APIResponseModelsObject(models.size, models)
     ))
 }

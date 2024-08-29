@@ -2,6 +2,7 @@ package fi.floo.voice.routing.auth
 
 import fi.floo.voice.config
 import fi.floo.voice.generateToken
+import fi.floo.voice.httpCodeToError
 import fi.floo.voice.types.AccessToken
 import fi.floo.voice.types.HandoffData
 import fi.floo.voice.types.UserData
@@ -32,64 +33,70 @@ suspend fun authCallback(call: ApplicationCall) {
 
     if (code == null) {
         call.respondRedirect("/auth/init")
+        return
+    }
+
+    if (code.length > 8) {
+        call.respond(HttpStatusCode.PayloadTooLarge, httpCodeToError(HttpStatusCode.PayloadTooLarge))
+        return
+    }
+
+    val client = HttpClient(CIO) {
+        install(ContentNegotiation) {
+            json(Json { ignoreUnknownKeys = true })
+        }
+    }
+
+    val accessToken = client.request("https://account.equestria.dev/hub/api/rest/oauth2/token") {
+        method = HttpMethod.Post
+        headers {
+            append(
+                HttpHeaders.Authorization, "Basic ${
+                    Base64.getEncoder()
+                .encodeToString("${config.id}:${config.secret}".toByteArray())}")
+            append(HttpHeaders.ContentType, "application/x-www-form-urlencoded")
+            append(HttpHeaders.Accept, "application/json")
+        }
+        setBody("grant_type=authorization_code" +
+                "&redirect_uri=${URLEncoder.encode("$redirect/auth/callback", "utf-8")}" +
+                "&code=$code")
+    }.body<AccessToken>().access_token
+
+    val response = client.request("https://account.equestria.dev/hub/api/rest/users/me") {
+        method = HttpMethod.Get
+        headers {
+            append(HttpHeaders.Authorization, "Bearer $accessToken")
+            append(HttpHeaders.Accept, "application/json")
+        }
+    }
+    client.close()
+
+    val userData = response.body<UserData>()
+    val userDataString = response.body<String>()
+    val sessionToken = generateToken(96)
+
+    File("data/session/$sessionToken").writer().use { f ->
+        f.write(userDataString)
+    }
+
+    File("data/users/${userData.id}").writer().use { f ->
+        f.write(userDataString)
+    }
+
+    call.response.headers.append(
+        HttpHeaders.SetCookie,
+        "SSB_SESSION_TOKEN=$sessionToken; SameSite=None; Path=/; Secure; HttpOnly; SameSite=None; " +
+                "Max-Age=63072000")
+
+    if (config.development) {
+        val handoffToken = generateToken(32)
+        val handoffData = HandoffData(sessionToken, Instant.now().toEpochMilli())
+        File("data/handoff/$handoffToken").writer().use { f ->
+            f.write(Json.encodeToString(handoffData))
+        }
+
+        call.respondRedirect("http://localhost:3000/handoff#$handoffToken")
     } else {
-        val client = HttpClient(CIO) {
-            install(ContentNegotiation) {
-                json(Json { ignoreUnknownKeys = true })
-            }
-        }
-
-        val accessToken = client.request("https://account.equestria.dev/hub/api/rest/oauth2/token") {
-            method = HttpMethod.Post
-            headers {
-                append(
-                    HttpHeaders.Authorization, "Basic ${
-                        Base64.getEncoder()
-                    .encodeToString("${config.id}:${config.secret}".toByteArray())}")
-                append(HttpHeaders.ContentType, "application/x-www-form-urlencoded")
-                append(HttpHeaders.Accept, "application/json")
-            }
-            setBody("grant_type=authorization_code" +
-                    "&redirect_uri=${URLEncoder.encode("$redirect/auth/callback", "utf-8")}" +
-                    "&code=$code")
-        }.body<AccessToken>().access_token
-
-        val response = client.request("https://account.equestria.dev/hub/api/rest/users/me") {
-            method = HttpMethod.Get
-            headers {
-                append(HttpHeaders.Authorization, "Bearer $accessToken")
-                append(HttpHeaders.Accept, "application/json")
-            }
-        }
-        client.close()
-
-        val userData = response.body<UserData>()
-        val userDataString = response.body<String>()
-        val sessionToken = generateToken(96)
-
-        File("data/session/$sessionToken").writer().use { f ->
-            f.write(userDataString)
-        }
-
-        File("data/users/${userData.id}").writer().use { f ->
-            f.write(userDataString)
-        }
-
-        call.response.headers.append(
-            HttpHeaders.SetCookie,
-            "SSB_SESSION_TOKEN=$sessionToken; SameSite=None; Path=/; Secure; HttpOnly; SameSite=None; " +
-                    "Max-Age=63072000")
-
-        if (config.development) {
-            val handoffToken = generateToken(32)
-            val handoffData = HandoffData(sessionToken, Instant.now().toEpochMilli())
-            File("data/handoff/$handoffToken").writer().use { f ->
-                f.write(Json.encodeToString(handoffData))
-            }
-
-            call.respondRedirect("http://localhost:3000/handoff#$handoffToken")
-        } else {
-            call.respondRedirect("https://voice.floo.fi/app")
-        }
+        call.respondRedirect("https://voice.floo.fi/app")
     }
 }

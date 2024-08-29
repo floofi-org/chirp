@@ -28,10 +28,12 @@ fun Application.configureRouting() {
         get("/api/v2/models") { apiV2Models(call) }
         get("/api/v2/status") { apiV2Status(call) }
         get("/api/v2/available") { apiV2Available(call) }
-        get("/api/v2/history") { apiV2History(call) }  // TODO: ?amount
-        // TODO: GET history/:id
-        // TODO: DELETE history
+        get("/api/v2/history") { apiV2History(call) }
+        get("/api/v2/history/{id}") { apiV2HistoryId(call) }
+        delete("/api/v2/history/{id}") { apiV2HistoryDelete(call) }
         // TODO: POST generate
         post("/api/v2/handoff") { apiV2Handoff(call) }
+
+        // TODO: admin?
     }
 }
