@@ -102,32 +102,31 @@ function getPossible(): bool {
 }
 
 function getFilterCode($original) {
-    $text = strtolower(trim($original ?? ""));
-
-    $list = $list2 = explode("\n", trim(strtolower(file_get_contents($_SERVER['DOCUMENT_ROOT'] . "/includes/list.txt"))));
-
-    if ($text === "") {
-        die("false");
-    }
-
+    // Use some code thing?
     $code = 0;
 
-    $ptext = " " . preg_replace("/ +/", " ", preg_replace("/[^a-z]/", " ", $text)) . " ";
-
+    // For each item in the list
     foreach ($list as $item) {
+        // Trim that item (already done in Kotlin)
         $item = trim($item);
 
+        // If the processed text contains this item
         if (str_contains($ptext, $item)) {
+            // And the item is longer than 4 characters, or it is an entire word
             if (strlen($item) > 4 || str_contains($ptext, " " . $item . " ")) {
-                $code = 2;
+                $code = 2; // Code 2?
+            // Or if it is (shorter than) 4 characters and is an entire word
             } else if (str_contains($ptext, " " . $item . " ")) {
-                $code = 1;
+                $code = 1; // Code 1?
             }
         }
     }
 
+    // If the code is still 0?
     if ($code === 0) {
+        // Process the list again??
         foreach ($list2 as $item) {
+            // This does literally the same stuff as above
             $item = trim($item);
 
             if (str_contains($ptext, $item)) {
@@ -138,13 +137,16 @@ function getFilterCode($original) {
         }
     }
 
+    // I think this was meant to block like "Ahhhh~"
     if (str_contains($text, "~") || trim($ptext) === "ah") {
         $code = 2;
     }
 
+    // This uses a completely unneeded online profanity check service
     if ($code !== 2 && file_get_contents("https://www.purgomalum.com/service/containsprofanity?text=" . rawurlencode($text)) === "true") {
-        $code = 3;
+        $code = 3; // Code 3?
     }
 
+    // And now we return this code, in the Kotlin version we want a boolean instead
     return $code;
 }

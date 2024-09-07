@@ -67,7 +67,7 @@ output: any|null
             <tr>
                 <td>400</td>
                 <td>Bad Request</td>
-                <td>A required argument for this endpoint is missing or incorrectly formatted.</td>
+                <td>A required argument for this endpoint is missing or incorrectly formatted, or the request goes against Voice Generator's content filters and/or applicable use policy.</td>
             </tr>
             <tr>
                 <td>401</td>
@@ -77,7 +77,7 @@ output: any|null
             <tr>
                 <td>403</td>
                 <td>Forbidden</td>
-                <td>You should normally have access to this endpoint, but your account has been blocked by the administrators.</td>
+                <td>You should normally have access to this endpoint, but your account has been blocked by the administrators, or you have tried to access an administration endpoint without being an administrator.</td>
             </tr>
             <tr>
                 <td>404</td>
@@ -90,11 +90,6 @@ output: any|null
                 <td>The HTTP method used at this endpoint is not the one that is expected.</td>
             </tr>
             <tr>
-                <td>409</td>
-                <td>Conflict</td>
-                <td>You have tried to change the state of an item to a state it is already in.</td>
-            </tr>
-            <tr>
                 <td>413</td>
                 <td>Payload Too Large</td>
                 <td>One of the parameters sent to this API endpoint is longer than the allowed length.</td>
@@ -105,11 +100,6 @@ output: any|null
                 <td>This API key has exceeded the number of allowed requests in a certain timespan.</td>
             </tr>
             <tr>
-                <td>451</td>
-                <td>Unavailable For Legal Reasons</td>
-                <td>The request goes against Voice Generator's content filters and/or applicable use policy.</td>
-            </tr>
-            <tr>
                 <td>500</td>
                 <td>Internal Server Error</td>
                 <td>A server error has occurred while processing this request.</td>
@@ -117,7 +107,7 @@ output: any|null
             <tr>
                 <td>501</td>
                 <td>Not Implemented</td>
-                <td>The AI model you are trying to use does not exist.</td>
+                <td>The AI model you are trying to use does not exist or is not yet enabled.</td>
             </tr>
         </tbody>
     </table>
@@ -137,7 +127,7 @@ output: any|null
         <tbody>
         <tr>
             <td><code>GET</code></td>
-            <td>v2/models<br><span class="badge bg-secondary-subtle">Kotlin</span></td>
+            <td>v2/models</td>
             <td>-</td>
             <td>Get the available models.</td>
             <td><pre>{
@@ -154,23 +144,16 @@ output: any|null
         </tr>
         <tr>
             <td><code>GET</code></td>
-            <td>v2/status<br><span class="badge bg-secondary-subtle">Kotlin</span></td>
+            <td>v2/status</td>
             <td>-</td>
             <td>Get system information.</td>
             <td><pre>{
-    "user": string<!--,
-    "processingUnits": [
-        {
-            "id": string,
-            "pid": number,
-            "busy": boolean
-        }
-    ]-->
+    "user": string
 }</pre></td>
         </tr>
         <tr>
             <td><code>GET</code></td>
-            <td>v2/available<br><span class="badge bg-secondary-subtle">Kotlin</span></td>
+            <td>v2/available</td>
             <td>-</td>
             <td>Check if enqueing a new generation is possible.</td>
             <td><pre>{
@@ -179,8 +162,8 @@ output: any|null
         </tr>
         <tr>
             <td><code>GET</code></td>
-            <td>v2/history<br><span class="badge bg-secondary-subtle">Kotlin</span></td>
-            <td>URL: <code>amount</code>: number (optional)</td>
+            <td>v2/history</td>
+            <td>URL: <code>amount</code>: number (optional, default 30)</td>
             <td>Get previous generations associated with this account.</td>
             <td><pre>{
     "count": number,
@@ -189,7 +172,8 @@ output: any|null
             "id": string,
             "model": string,
             "version": string,
-            "author": string,
+            "authorId": string,
+            "authorName": string,
             "time": string,
             "timeTs": number,
             "audioUrl": string?,
@@ -202,14 +186,15 @@ output: any|null
         </tr>
         <tr>
             <td><code>GET</code></td>
-            <td>v2/history/<b>:id</b><br><span class="badge bg-secondary-subtle">Kotlin</span></td>
+            <td>v2/history/<b>:id</b></td>
             <td>-</td>
             <td>Get a specific generation from its ID.</td>
             <td><pre>{
     "id": string,
     "model": string,
     "version": string,
-    "author": string,
+    "authorId": string,
+    "authorName": string,
     "time": string,
     "timeTs": number,
     "audioUrl": string?,
@@ -220,14 +205,15 @@ output: any|null
         </tr>
         <tr>
             <td><code>DELETE</code></td>
-            <td>v2/history/<b>:id</b><br><span class="badge bg-secondary-subtle">Kotlin</span></td>
+            <td>v2/history/<b>:id</b></td>
             <td>-</td>
             <td>Remove a specific generation from your history using its ID.</td>
             <td><pre>{
     "id": string,
     "model": string,
     "version": string,
-    "author": string,
+    "authorId": string,
+    "authorName": string,
     "time": string,
     "timeTs": number,
     "audioUrl": string?,
@@ -247,11 +233,63 @@ output: any|null
         </tr>
         <tr>
             <td><code>POST</code></td>
-            <td>v2/handoff<br><span class="badge bg-secondary-subtle">Kotlin</span></td>
+            <td>v2/handoff</td>
             <td>JSON <code>token</code>: string</td>
             <td>Get an interactive access token from a client handoff token. Used only during development.</td>
             <td><pre>{
     "token": string
+}</pre></td>
+        </tr>
+        <tr>
+            <td><code>GET</code></td>
+            <td>v2/admin/available</td>
+            <td>-</td>
+            <td>Check if this account has access to administrator tools.</td>
+            <td><pre>{
+    "available": boolean
+}</pre></td>
+        </tr>
+        <tr>
+            <td><code>GET</code></td>
+            <td>v2/admin/history</td>
+            <td>URL: <code>amount</code>: number (optional, default 30)</td>
+            <td>Get all previous unreviewed generations.</td>
+            <td><pre>{
+    "count": number,
+    "history": [
+        {
+            "id": string,
+            "model": string,
+            "version": string,
+            "authorId": string,
+            "authorName": string,
+            "time": string,
+            "timeTs": number,
+            "audioUrl": string?,
+            "graphUrl": string?,
+            "input": string,
+            "status": generation-status,
+        }
+    ]
+}</pre></td>
+        </tr>
+        <tr>
+            <td><code>DELETE</code></td>
+            <td>v2/admin/history/<b>:id</b></td>
+            <td>-</td>
+            <td>Mark a generation as reviewed using its ID.</td>
+            <td><pre>{
+    "id": string,
+    "model": string,
+    "version": string,
+    "authorId": string,
+    "authorName": string,
+    "time": string,
+    "timeTs": number,
+    "audioUrl": string?,
+    "graphUrl": string?,
+    "input": string,
+    "status": generation-status,
 }</pre></td>
         </tr>
         </tbody>

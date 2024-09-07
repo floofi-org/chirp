@@ -25,7 +25,7 @@ suspend fun apiV2HistoryDelete(call: ApplicationCall) {
     }
 
     Generation.fromId(id)?.let {
-        if (it.data.status == "blocked" || it.data.author != auth.userData.id) {
+        if (it.data.status == "blocked" || it.data.authorId != auth.userData.id) {
             call.respond(HttpStatusCode.NotFound, httpCodeToError(HttpStatusCode.NotFound))
         } else if (it.data.status == "removed") {
             call.respond(HttpStatusCode.Conflict, httpCodeToError(HttpStatusCode.Conflict))

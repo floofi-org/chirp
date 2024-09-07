@@ -4,7 +4,6 @@ import fi.floo.voice.types.*
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.response.*
-import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import java.io.File
 import java.security.SecureRandom
@@ -22,17 +21,19 @@ fun generateToken(size: Long): String {
     return list.joinToString("")
 }
 
-fun generateAPIKey(): String {
-    val chrs = "0123456789abcdefghijklmnopqrstuvwxyz-_ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+fun generateAPIKey(): String = generateToken(48)
+fun generateJobID(): String = generateToken(64)
 
-    val secureRandom = SecureRandom.getInstanceStrong()
+fun getUserFromID(id: String): UserData? {
+    val file = File("data/users/$id")
+    val laxJson = Json { ignoreUnknownKeys = true }
 
-    val list = secureRandom
-        .ints(48, 0, chrs.length)
-        .mapToObj { i -> chrs[i] }
-        .toList()
-
-    return list.joinToString("")
+    return if (file.exists()) {
+        val dataString = file.readText()
+        laxJson.decodeFromString(dataString)
+    } else {
+        null
+    }
 }
 
 fun getSession(call: ApplicationCall): UserData? {
@@ -87,9 +88,7 @@ fun getAPIKey(id: String): String {
     val file = File("data/keys/$id")
 
     if (!file.exists()) {
-        file.writer().use { f ->
-            f.write(generateAPIKey())
-        }
+        file.writeText(generateAPIKey())
     }
 
     return file.readText().trim()
@@ -127,12 +126,18 @@ suspend fun getAuthenticationData(call: ApplicationCall, mode: AuthenticationMod
 
             if (session == null) {
                 if (mode == AuthenticationMode.Enforced) {
-                    call.respondText(text = Json.encodeToString(httpCodeToError(HttpStatusCode.Unauthorized)),
-                        status = HttpStatusCode.Unauthorized, contentType = ContentType.Application.Json)
+                    call.respond(HttpStatusCode.Unauthorized, httpCodeToError(HttpStatusCode.Unauthorized))
                 }
+
                 AuthenticationData(false, null, null)
             } else {
                 val apiKey = getAPIKey(session.id)
+
+                if (config.banned.contains(session.id)) {
+                    call.respond(HttpStatusCode.Forbidden, httpCodeToError(HttpStatusCode.Forbidden))
+                    return AuthenticationData(false, null, null)
+                }
+
                 AuthenticationData(true, session, apiKey)
             }
         }

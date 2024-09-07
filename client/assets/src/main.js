@@ -24,15 +24,15 @@
         return await _fetch(input, init);
     }
 
-    window.models = (await (await fetch(window.SERVER + "/api/v2/models")).json()).output;
+    window.models = (await (await fetch(window.SERVER + "/api/v2/models")).json()).output.models;
     window.processing = false;
 
     document.getElementById("model").innerHTML = window.models.map(i => `
-                <option value="${i.id}">${i.name}</option>
-            `).join("");
+        <option value="${i.id}">${i.name}</option>
+    `).join("");
     document.getElementById("model-details").innerHTML = window.models.map(i => `
-                <div id="model-${i.id}" class="model text-muted small" style="text-align: center; display: none;">v${i.version} • ${i.source}</div>
-            `).join("");
+        <div id="model-${i.id}" class="model text-muted small" style="text-align: center; display: none;">v${i.version} • ${i.source}</div>
+    `).join("");
 
     refreshModel();
 
@@ -81,7 +81,7 @@
                     if (!data['error']) {
                         document.getElementById("input").value = "";
 
-                        fetch(window.SERVER + "/api/v2/history?amount=30").then((res) => {
+                        fetch(window.SERVER + "/api/v2/history").then((res) => {
                             res.json().then((data) => {
                                 window.listData = data['output']['history'];
                                 refreshList();
@@ -175,7 +175,7 @@
         fetch(window.SERVER + "/api/v2/history/" + id, {
             method: "DELETE"
         }).then(() => {
-            fetch(window.SERVER + "/api/v2/history?amount=30").then((res) => {
+            fetch(window.SERVER + "/api/v2/history").then((res) => {
                 res.json().then((data) => {
                     window.listData = data['output']['history'];
                     window.lastList = data['output']['history'];
@@ -192,7 +192,7 @@
     window.playerDownload = (id, name) => {
         let element = document.createElement("a");
         element.setAttribute("download", name);
-        element.setAttribute("href", "https://cdn.equestria.dev/sunnystarbot/content/" + id + "/audio.wav");
+        element.setAttribute("href", "https://cdn.floo.fi/voice-generator/content/" + id + "/audio.wav");
         element.click();
     }
 
@@ -205,7 +205,7 @@
             document.getElementById("list-message").style.display = "none";
             document.getElementById("list").style.display = "";
 
-            for (let id of Array.from(document.getElementById("list").children).map(i => i.id.split("-")[1])) {
+            for (let id of Array.from(document.getElementById("list").children).map(i => i.id.split("-").slice(1).join("-"))) {
                 if (!data.map(i => i.id).includes(id)) {
                     document.getElementById("history-" + id).outerHTML = "";
                 }
@@ -348,11 +348,11 @@
                 if (item.status === "processed") {
                     document.querySelector("#history-" + item.id + " .history-player").style.display = "";
                     document.querySelector("#history-" + item.id + " .history-spectrogram").style.display = "flex";
-                    document.querySelector("#history-" + item.id + " .history-spectrogram-img").src = "https://cdn.equestria.dev/sunnystarbot/content/" + item.id + "/figure.png";
+                    document.querySelector("#history-" + item.id + " .history-spectrogram-img").src = "https://cdn.floo.fi/voice-generator/" + item.id + "/figure.png";
                     if (document.querySelector("#history-" + item.id + " .history-loading")) document.querySelector("#history-" + item.id + " .history-loading").style.display = "none";
 
                     if (document.querySelector("#history-" + item.id + " .history-player audio").src.trim() === "") {
-                        document.querySelector("#history-" + item.id + " .history-player audio").src = "https://cdn.equestria.dev/sunnystarbot/content/" + item.id + "/audio.wav";
+                        document.querySelector("#history-" + item.id + " .history-player audio").src = "https://cdn.floo.fi/voice-generator/" + item.id + "/audio.wav";
                     }
                 } else {
                     document.querySelector("#history-" + item.id + " .history-player").style.display = "none";
@@ -387,7 +387,7 @@
 
     window.configureRefresh = () => {
         function refresh() {
-            fetch(window.SERVER + "/api/v2/history?amount=30").then((res) => {
+            fetch(window.SERVER + "/api/v2/history").then((res) => {
                 res.json().then((data) => {
                     window.listData = data['output']['history'];
                     refreshList();

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="WebServers">
+    <option name="servers">
+      <webServer id="73efd649-911d-442a-b9a7-4af27c477e65" name="dabssi (project level)">
+        <fileTransfer accessType="SFTP" host="main" port="22" sshConfigId="239b8b94-03bb-44dc-9d9b-96800fc30e8d" sshConfig="root@main:22 agent" authAgent="true">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" keepAliveTimeout="0" passiveMode="true" shareSSLContext="true" />
+          </advancedOptions>
+        </fileTransfer>
+      </webServer>
+    </option>
+  </component>
+</project>

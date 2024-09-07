@@ -2,9 +2,10 @@ package fi.floo.voice
 
 import fi.floo.voice.server.getServer
 import fi.floo.voice.server.loadConfig
-import fi.floo.voice.types.Config
+import fi.floo.voice.types.BlockList
 
-var config: Config = loadConfig()
+val config = loadConfig()
+val blockList = BlockList()
 
 fun main() {
     getServer().start(wait = true)

@@ -22,3 +22,4 @@ serverkt/build
 serverkt/out
 serverkt/.kotlin
 serverkt/*.jar
+serverkt/blocklist.txt

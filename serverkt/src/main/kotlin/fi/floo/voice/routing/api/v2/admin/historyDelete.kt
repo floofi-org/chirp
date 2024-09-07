@@ -1,15 +1,22 @@
-package fi.floo.voice.routing.api.v2
+package fi.floo.voice.routing.api.v2.admin
 
+import fi.floo.voice.config
 import fi.floo.voice.getAuthenticationData
 import fi.floo.voice.httpCodeToError
 import fi.floo.voice.types.*
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.response.*
+import java.io.File
 
-suspend fun apiV2HistoryId(call: ApplicationCall) {
+suspend fun apiV2AdminHistoryDelete(call: ApplicationCall) {
     val auth = getAuthenticationData(call, AuthenticationMode.Enforced)
     if (!auth.authenticated || auth.userData == null) return
+
+    if (config.admin != auth.userData.id) {
+        call.respond(HttpStatusCode.Forbidden, httpCodeToError(HttpStatusCode.Forbidden))
+        return
+    }
 
     val id = call.parameters["id"]
 
@@ -24,15 +31,10 @@ suspend fun apiV2HistoryId(call: ApplicationCall) {
     }
 
     Generation.fromId(id)?.let {
-        if (it.data.status == "blocked" || it.data.authorId != auth.userData.id) {
-            call.respond(HttpStatusCode.NotFound, httpCodeToError(HttpStatusCode.NotFound))
-        } else {
-            call.respond(HttpStatusCode.OK, APIResponse(
-                error = null,
-                output = it.data
-            ))
-        }
-
-        return
+        File("data/generations/${it.data.id}/reviewed.txt").createNewFile()
+        call.respond(HttpStatusCode.OK, APIResponse(
+            error = null,
+            output = it.data
+        ))
     }
 }

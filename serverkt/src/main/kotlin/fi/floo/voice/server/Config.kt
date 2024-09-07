@@ -3,16 +3,14 @@ package fi.floo.voice.server
 import fi.floo.voice.types.Config
 import kotlinx.serialization.json.Json
 import java.io.File
-import java.nio.file.Files
-import java.nio.file.Paths
 
 fun loadConfig(): Config {
-    Files.createDirectories(Paths.get("data"))
-    Files.createDirectories(Paths.get("data/generations"))
-    Files.createDirectories(Paths.get("data/handoff"))
-    Files.createDirectories(Paths.get("data/session"))
-    Files.createDirectories(Paths.get("data/users"))
-    Files.createDirectories(Paths.get("data/keys"))
+    File("data").mkdir()
+    File("data/generations").mkdir()
+    File("data/handoff").mkdir()
+    File("data/session").mkdir()
+    File("data/users").mkdir()
+    File("data/keys").mkdir()
 
     val file = File("config.json")
     return Json.decodeFromString(file.readText())

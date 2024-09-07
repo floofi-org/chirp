@@ -1,20 +1,27 @@
-package fi.floo.voice.routing.api.v2
+package fi.floo.voice.routing.api.v2.admin
 
+import fi.floo.voice.config
 import fi.floo.voice.getAuthenticationData
+import fi.floo.voice.httpCodeToError
 import fi.floo.voice.types.*
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.response.*
+import java.io.File
 import java.lang.Integer.min
 
-suspend fun apiV2History(call: ApplicationCall) {
+suspend fun apiV2AdminHistory(call: ApplicationCall) {
     val auth = getAuthenticationData(call, AuthenticationMode.Enforced)
     if (!auth.authenticated || auth.userData == null) return
 
-    val list: GenerationList = Generation.forUser(auth.userData)
+    if (config.admin != auth.userData.id) {
+        call.respond(HttpStatusCode.Forbidden, httpCodeToError(HttpStatusCode.Forbidden))
+        return
+    }
+
+    val list: GenerationList = Generation.getAll()
     list.inner = list.inner
-        .filter { it.data.status != "blocked" }
-        .filter { it.data.status != "removed" }
+        .filter { !File("data/generations/${it.data.id}/reviewed.txt").exists() }
         .toMutableList()
 
     val amount = call.parameters["amount"] ?: "30"

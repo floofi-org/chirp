@@ -75,13 +75,8 @@ suspend fun authCallback(call: ApplicationCall) {
     val userDataString = response.body<String>()
     val sessionToken = generateToken(96)
 
-    File("data/session/$sessionToken").writer().use { f ->
-        f.write(userDataString)
-    }
-
-    File("data/users/${userData.id}").writer().use { f ->
-        f.write(userDataString)
-    }
+    File("data/session/$sessionToken").writeText(userDataString)
+    File("data/users/${userData.id}").writeText(userDataString)
 
     call.response.headers.append(
         HttpHeaders.SetCookie,
@@ -91,9 +86,7 @@ suspend fun authCallback(call: ApplicationCall) {
     if (config.development) {
         val handoffToken = generateToken(32)
         val handoffData = HandoffData(sessionToken, Instant.now().toEpochMilli())
-        File("data/handoff/$handoffToken").writer().use { f ->
-            f.write(Json.encodeToString(handoffData))
-        }
+        File("data/handoff/$handoffToken").writeText(Json.encodeToString(handoffData))
 
         call.respondRedirect("http://localhost:3000/handoff#$handoffToken")
     } else {

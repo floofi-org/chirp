@@ -12,6 +12,8 @@ import io.ktor.server.plugins.cors.routing.*
 import io.ktor.server.plugins.statuspages.*
 import io.ktor.server.response.*
 import io.ktor.server.velocity.*
+import org.apache.velocity.runtime.RuntimeConstants
+import org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader
 
 fun getServer(): NettyApplicationEngine {
     return embeddedServer(Netty, port = 8080, host = "0.0.0.0") {
@@ -48,7 +50,10 @@ fun getServer(): NettyApplicationEngine {
             }
         }
 
-        install(Velocity)
+        install(Velocity) {
+            setProperty(RuntimeConstants.RESOURCE_LOADER, "classpath")
+            setProperty("classpath.resource.loader.class", ClasspathResourceLoader::class.java.name)
+        }
 
         configureRouting()
     }

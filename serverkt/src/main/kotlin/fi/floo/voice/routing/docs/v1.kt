@@ -13,6 +13,6 @@ suspend fun docsV1(call: ApplicationCall) {
         call.respondRedirect("/auth/init")
     } else {
         val apiKey = getAPIKey(session.id)
-        call.respond(VelocityContent("resources/views/docs-v1.vl", mapOf("apiKey" to apiKey)))
+        call.respond(VelocityContent("views/docs-v1.vl", mapOf("apiKey" to apiKey)))
     }
 }
