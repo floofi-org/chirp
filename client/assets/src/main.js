@@ -192,7 +192,7 @@
     window.playerDownload = (id, name) => {
         let element = document.createElement("a");
         element.setAttribute("download", name);
-        element.setAttribute("href", "https://cdn.floo.fi/voice-generator/content/" + id + "/audio.wav");
+        element.setAttribute("href", "https://cdn.floo.fi/voice-generator/" + id + "/audio.wav");
         element.click();
     }
 
