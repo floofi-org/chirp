@@ -11,7 +11,7 @@ suspend fun authInit(call: ApplicationCall) {
         "https://voice-api.floo.fi"
     }
 
-    call.respondRedirect("https://account.equestria.dev/hub/api/rest/oauth2/auth" +
+    call.respondRedirect("https://id.floo.fi/hub/api/rest/oauth2/auth" +
             "?client_id=${config.id}" +
             "&response_type=code" +
             "&redirect_uri=$redirect/auth/callback" +

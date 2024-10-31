@@ -47,7 +47,7 @@ suspend fun authCallback(call: ApplicationCall) {
         }
     }
 
-    val accessToken = client.request("https://account.equestria.dev/hub/api/rest/oauth2/token") {
+    val accessToken = client.request("https://id.floo.fi/hub/api/rest/oauth2/token") {
         method = HttpMethod.Post
         headers {
             append(
@@ -62,7 +62,7 @@ suspend fun authCallback(call: ApplicationCall) {
                 "&code=$code")
     }.body<AccessToken>().access_token
 
-    val response = client.request("https://account.equestria.dev/hub/api/rest/users/me") {
+    val response = client.request("https://id.floo.fi/hub/api/rest/users/me") {
         method = HttpMethod.Get
         headers {
             append(HttpHeaders.Authorization, "Bearer $accessToken")
