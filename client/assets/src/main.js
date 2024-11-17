@@ -409,7 +409,7 @@
     configureRefresh();
     await prepareNavbar();
 
-    document.getElementById("loader").style.display = "none";
+    completeLoad();
     document.getElementById("app").style.display = "";
 })();
 

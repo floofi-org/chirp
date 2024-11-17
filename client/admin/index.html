@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Administrator Tools | Floofi Voice Generator</title>
-    <link rel="stylesheet" href="https://fella.floo.fi/0.3.4/fella.min.css" integrity="sha384-CgGuCRnfADK2xVr1prHidzyuBRNFac8DehAwfqBx2kIXjLZ0Zsq/DTcFysSrRySg" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://fella.floo.fi/fella.min.css" crossorigin="anonymous">
     <link rel="shortcut icon" href="/assets/favicon.png" type="image/svg+xml">
     <script src="/assets/src/config.js"></script>
     <script defer data-domain="voice.floo.fi" src="https://insights.floo.fi/js/script.file-downloads.hash.outbound-links.js"></script>
@@ -87,6 +87,7 @@
         </section>
     </div>
 
+    <script src="https://fella.floo.fi/fella.min.js"></script>
     <script src="/assets/src/navbar.js"></script>
     <script>
         (async () => {
@@ -112,7 +113,7 @@
                 if (allowed) {
                     await prepareNavbar();
                     await load();
-                    document.getElementById("loader").style.display = "none";
+                    completeLoad();
                     document.getElementById("prompt").style.display = "";
                 } else {
                     location.href = "/app";

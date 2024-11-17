@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Floofi Voice Generator</title>
-    <link rel="stylesheet" href="https://fella.floo.fi/0.3.4/fella.min.css" integrity="sha384-CgGuCRnfADK2xVr1prHidzyuBRNFac8DehAwfqBx2kIXjLZ0Zsq/DTcFysSrRySg" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://fella.floo.fi/fella.min.css" crossorigin="anonymous">
     <link rel="shortcut icon" href="/assets/favicon.png" type="image/svg+xml">
     <script src="/assets/src/config.js"></script>
     <script defer data-domain="voice.floo.fi" src="https://insights.floo.fi/js/script.file-downloads.hash.outbound-links.js"></script>
@@ -81,6 +81,7 @@
         </div>
     </div>
 
+    <script src="https://fella.floo.fi/fella.min.js"></script>
     <script>
         (async () => {
             document.getElementById("login").href = window.SERVER + "/auth/init";
@@ -93,7 +94,7 @@
             })).json()).error?.code;
 
             if (code === 401) {
-                document.getElementById("loader").style.display = "none";
+                completeLoad();
                 document.getElementById("prompt").style.display = "";
                 document.getElementById("login").href += "?origin=" + encodeURIComponent(location.origin);
             } else if (code === 403) {
