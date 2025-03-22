@@ -18,5 +18,9 @@
         }
       ]
     }
+  ],
+  "redirects": [
+    { "source": "/", "destination": "/eol", "permanent": true },
+    { "source": "/((?!eol|assets).*)", "destination": "/eol", "permanent": true }
   ]
 }
